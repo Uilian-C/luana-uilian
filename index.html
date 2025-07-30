@@ -321,16 +321,6 @@
         <p class="mt-2 font-display tracking-widest">20.09.2025</p>
     </footer>
 
-    <!-- Botão de Música -->
-    <button id="music-toggle" class="fixed bottom-5 right-5 w-12 h-12 bg-olive-green/80 backdrop-blur-sm text-cream-white rounded-full shadow-lg flex items-center justify-center z-40 hover:bg-olive-green transition">
-        <i id="music-icon" class="fa-solid fa-music"></i>
-    </button>
-    <!-- Player de Áudio -->
-    <audio id="background-music" loop>
-        <!-- IMPORTANTE: Substitua o 'src' pelo link do seu arquivo de música .mp3 -->
-        <source src="https://storage.googleapis.com/gemini-web-assets/2024/07/wedding-music-placeholder.mp3" type="audio/mpeg">
-    </audio>
-
     <!-- Modal para Fotos -->
     <div id="photo-modal" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 hidden opacity-0" onclick="this.classList.add('hidden', 'opacity-0')">
         <img id="modal-image" src="" alt="Foto em destaque" class="rounded-lg shadow-2xl transform scale-95">
@@ -394,9 +384,6 @@
         const scrollLeftBtn = document.getElementById('scroll-left-btn');
         const scrollRightBtn = document.getElementById('scroll-right-btn');
         const saveToCalendarBtn = document.getElementById('save-to-calendar');
-        const musicToggle = document.getElementById('music-toggle');
-        const musicIcon = document.getElementById('music-icon');
-        const backgroundMusic = document.getElementById('background-music');
         const confettiCanvas = document.getElementById('confetti-canvas');
         const weddingPhraseEl = document.getElementById('wedding-phrase');
 
@@ -711,21 +698,6 @@ END:VCALENDAR`;
             showToast("Evento salvo! Abra o arquivo para adicionar à sua agenda.");
         });
         
-        // --- LÓGICA DA MÚSICA DE FUNDO ---
-        let isMusicPlaying = false;
-        musicToggle.addEventListener('click', () => {
-            if (isMusicPlaying) {
-                backgroundMusic.pause();
-                musicIcon.classList.remove('fa-pause');
-                musicIcon.classList.add('fa-music');
-            } else {
-                backgroundMusic.play();
-                musicIcon.classList.remove('fa-music');
-                musicIcon.classList.add('fa-pause');
-            }
-            isMusicPlaying = !isMusicPlaying;
-        });
-
         // --- LÓGICA DAS FRASES ALEATÓRIAS ---
         const phrases = [
             "O amor é a poesia dos sentidos.",
@@ -800,7 +772,9 @@ END:VCALENDAR`;
 
 
         const countdown = () => {
-            const weddingDate = new Date("2025-09-20T14:00:00").getTime();
+            // PARA TESTAR OS CONFETES, A DATA FOI ALTERADA PARA O PASSADO.
+            // LEMBRE-SE DE VOLTAR PARA: "2025-09-20T14:00:00"
+            const weddingDate = new Date("2024-07-30T14:00:00").getTime();
             const now = new Date().getTime();
             const gap = weddingDate - now;
 
