@@ -283,7 +283,6 @@
                              <p class="text-xs text-center text-dark-charcoal/60 -mt-1 mb-3">Selecione a música na lista de resultados.</p>
                             <div id="dj-search-results" class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-lg max-h-48 overflow-y-auto hidden"></div>
                         </div>
-                        <input id="dj-song-artist" type="text" placeholder="Artista / Banda" class="w-full p-2 mb-3 rounded border border-sage-green" readonly>
                         <button id="submit-dj-song" class="w-full bg-olive-green hover:bg-hunter-green text-cream-white font-bold py-2 px-4 rounded-full transition disabled:bg-gray-400" disabled>Enviar Sugestão</button>
                         <ul id="dj-suggestions-list" class="suggestion-list mt-4 space-y-2 max-h-40 overflow-y-auto pr-2"></ul>
                     </div>
@@ -298,7 +297,6 @@
                              <p class="text-xs text-center text-dark-charcoal/60 -mt-1 mb-3">Selecione a música na lista de resultados.</p>
                             <div id="band-search-results" class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-lg max-h-48 overflow-y-auto hidden"></div>
                         </div>
-                        <input id="band-song-artist" type="text" placeholder="Artista / Banda" class="w-full p-2 mb-3 rounded border border-sage-green" readonly>
                         <button id="submit-band-song" class="w-full bg-olive-green hover:bg-hunter-green text-cream-white font-bold py-2 px-4 rounded-full transition disabled:bg-gray-400" disabled>Enviar Pedido</button>
                         <ul id="band-requests-list" class="suggestion-list mt-4 space-y-2 max-h-40 overflow-y-auto pr-2"></ul>
                     </div>
@@ -464,12 +462,10 @@
         const msgScrollRightBtn = document.getElementById('msg-scroll-right-btn');
         const djSongSearchInput = document.getElementById('dj-song-search');
         const djSearchResults = document.getElementById('dj-search-results');
-        const djSongArtistInput = document.getElementById('dj-song-artist');
         const submitDjSongBtn = document.getElementById('submit-dj-song');
         const djSuggestionsList = document.getElementById('dj-suggestions-list');
         const bandSongSearchInput = document.getElementById('band-song-search');
         const bandSearchResults = document.getElementById('band-search-results');
-        const bandSongArtistInput = document.getElementById('band-song-artist');
         const submitBandSongBtn = document.getElementById('submit-band-song');
         const bandRequestsList = document.getElementById('band-requests-list');
         
@@ -812,7 +808,7 @@
         window.addEventListener('resize', checkMessageScrollButtons);
         
         // --- LÓGICA DAS SUGESTÕES DE MÚSICA ---
-        const setupSongSuggestor = (type, searchInput, searchResults, artistInput, submitBtn, listElement, collection) => {
+        const setupSongSuggestor = (type, searchInput, searchResults, submitBtn, listElement, collection) => {
             let searchTimeout;
             let selectedSong = null;
 
@@ -842,7 +838,6 @@
                             `;
                             item.onclick = () => {
                                 searchInput.value = song.trackName;
-                                artistInput.value = song.artistName;
                                 selectedSong = { trackId: song.trackId, trackName: song.trackName, artistName: song.artistName, artworkUrl: song.artworkUrl60, collectionName: song.collectionName };
                                 searchResults.classList.add('hidden');
                                 submitBtn.disabled = false;
@@ -876,7 +871,6 @@
                         createdAt: serverTimestamp()
                     });
                     searchInput.value = '';
-                    artistInput.value = '';
                     submitBtn.disabled = true;
                     selectedSong = null;
                     showToast("Sugestão enviada, obrigado!");
@@ -935,8 +929,8 @@
                 if (!listenersAttached) {
                     loadMessages();
                     loadPhotos();
-                    setupSongSuggestor('dj', djSongSearchInput, djSearchResults, djSongArtistInput, submitDjSongBtn, djSuggestionsList, djSuggestionsCollection);
-                    setupSongSuggestor('band', bandSongSearchInput, bandSearchResults, bandSongArtistInput, submitBandSongBtn, bandRequestsList, bandRequestsCollection);
+                    setupSongSuggestor('dj', djSongSearchInput, djSearchResults, submitDjSongBtn, djSuggestionsList, djSuggestionsCollection);
+                    setupSongSuggestor('band', bandSongSearchInput, bandSearchResults, submitBandSongBtn, bandRequestsList, bandRequestsCollection);
                     listenersAttached = true;
                 }
             } else {
