@@ -54,11 +54,11 @@
 
         /* Fundo com temática de casamento */
         body {
-            background-color: #FEFAE0;
-            background-image: url('https://www.transparenttextures.com/patterns/elegant-flowers.png');
+            background-color: #FEFAE0; /* cream-white */
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A3B18A' stroke-width='1' stroke-opacity='0.08'%3E%3C!-- Interlocking Rings --%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3Ccircle cx='55' cy='40' r='10'/%3E%3C!-- Filled Heart --%3E%3Cpath d='M150,30 C140,20 125,25 125,40 C125,55 150,70 150,70 C150,70 175,55 175,40 C175,25 160,20 150,30 Z' fill='%23A3B18A' fill-opacity='0.04'/%3E%3C!-- Champagne Flutes --%3E%3Cpath d='M80 100 L80 120 L75 125 L85 125 L80 120'/%3E%3Cpath d='M95 100 L95 120 L90 125 L100 125 L95 120'/%3E%3Cpath d='M80 100 L95 105'/%3E%3C!-- Outlined Heart --%3E%3Cpath d='M30,150 C20,140 5,145 5,160 C5,175 30,190 30,190 C30,190 55,175 55,160 C55,145 40,140 30,150 Z'/%3E%3C!-- Sparkle --%3E%3Cpath d='M120 150 L130 155 L140 150 L130 145 Z'/%3E%3Cpath d='M130 140 L130 160'/%3E%3Cpath d='M122 147 L138 153'/%3E%3Cpath d='M122 153 L138 147'/%3E%3C!-- Vine --%3E%3Cpath d='M170 120 Q180 130 170 140'/%3E%3Cpath d='M170 140 Q160 150 170 160'/%3E%3C/g%3E%3C/svg%3E");
             background-attachment: fixed;
             font-family: 'Montserrat', 'sans-serif';
-            color: #283618;
+            color: #283618; /* dark-charcoal */
         }
 
         /* Estilo para a barra de rolagem */
@@ -331,8 +331,8 @@
                 <!-- Carrossel de Miniaturas -->
                 <div id="thumbnail-gallery-container" class="relative">
                      <div id="thumbnail-gallery" class="flex gap-3 overflow-x-auto scroll-smooth p-2">
-                        <!-- Miniaturas serão inseridas aqui -->
-                    </div>
+                         <!-- Miniaturas serão inseridas aqui -->
+                     </div>
                     <button id="thumb-scroll-left-btn" class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1/2 bg-white/60 backdrop-blur-sm rounded-full shadow-md hover:bg-white/90 transition z-20 hidden md:flex items-center justify-center w-10 h-10">
                         <i class="fa-solid fa-chevron-left text-hunter-green"></i>
                     </button>
@@ -413,18 +413,21 @@
         // Importações do Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, doc, deleteDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
         // --- CONFIGURAÇÃO DO FIREBASE ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCfqesuR8nIDYoXtLMvQQqzeHTFmAurLZA",
-            authDomain: "casamento-luana-uilian.firebaseapp.com",
-            projectId: "casamento-luana-uilian",
-            storageBucket: "casamento-luana-uilian.firebasestorage.app",
-            messagingSenderId: "305363486620",
-            appId: "1:305363486620:web:c67a274d6aedc3cce1ea59"
-        };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : {
+                apiKey: "AIzaSyCfqesuR8nIDYoXtLMvQQqzeHTFmAurLZA",
+                authDomain: "casamento-luana-uilian.firebaseapp.com",
+                projectId: "casamento-luana-uilian",
+                storageBucket: "casamento-luana-uilian.firebasestorage.app",
+                messagingSenderId: "305363486620",
+                appId: "1:305363486620:web:c67a274d6aedc3cce1ea59"
+            };
 
         // --- ELEMENTOS DO DOM ---
         const messagesContainer = document.getElementById('messages-container');
@@ -471,28 +474,22 @@
         const submitBandSongBtn = document.getElementById('submit-band-song');
         const bandRequestsList = document.getElementById('band-requests-list');
         
-        // Verificação para garantir que a configuração foi preenchida
-        if (!firebaseConfig.apiKey) {
-            loadingMessages.textContent = "Erro de configuração: As chaves do Firebase não foram adicionadas ao código.";
-            loadingMessages.classList.add('text-red-500', 'font-bold');
-            throw new Error("Configuração do Firebase não encontrada. Preencha o objeto 'firebaseConfig' no script.");
-        }
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
         const storage = getStorage(app);
-        const messagesCollection = collection(db, `messages`);
-        const photosCollection = collection(db, 'photos');
-        const djSuggestionsCollection = collection(db, 'djSuggestions');
-        const bandRequestsCollection = collection(db, 'bandRequests');
+        
+        // Coleções com caminhos públicos corretos
+        const messagesCollection = collection(db, `artifacts/${appId}/public/data/messages`);
+        const photosCollection = collection(db, `artifacts/${appId}/public/data/photos`);
+        const djSuggestionsCollection = collection(db, `artifacts/${appId}/public/data/djSuggestions`);
+        const bandRequestsCollection = collection(db, `artifacts/${appId}/public/data/bandRequests`);
         
         let currentUser = null;
         let toastTimeout;
         let photoData = [];
         let currentPhotoIndex = 0;
-        let selectedDjSong = null;
-        let selectedBandSong = null;
+        let listenersAttached = false; // Flag para evitar listeners duplicados
 
         // --- FUNÇÕES DE UI (TOAST E MODAL) ---
         const showToast = (message) => {
@@ -539,7 +536,7 @@
             }
 
             const photoId = `${new Date().getTime()}-${file.name}`;
-            const storageRef = ref(storage, `photos/${photoId}`);
+            const storageRef = ref(storage, `artifacts/${appId}/public/data/photos/${photoId}`);
             const uploadTask = uploadBytesResumable(storageRef, file);
 
             uploadProgressBar.classList.remove('hidden');
@@ -697,7 +694,7 @@
             const photoRef = ref(storage, storagePath);
             try {
                 await deleteObject(photoRef);
-                await deleteDoc(doc(db, "photos", docId));
+                await deleteDoc(doc(photosCollection, docId));
                 showToast("Foto apagada com sucesso!");
             } catch (error) {
                 console.error("Erro ao apagar a foto:", error);
@@ -723,23 +720,6 @@
         window.addEventListener('resize', checkScrollButtons);
 
         // --- LÓGICA DO MURAL DE RECADOS ---
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                submitButton.disabled = false;
-                guestNameInput.disabled = false;
-                guestMessageInput.disabled = false;
-                loadMessages();
-                loadPhotos();
-                loadDjSuggestions();
-                loadBandRequests();
-            } else {
-                signInAnonymously(auth).catch((error) => {
-                    console.error("Erro no login anônimo:", error);
-                });
-            }
-        });
-
         const loadMessages = () => {
             const q = query(messagesCollection);
             onSnapshot(q, (snapshot) => {
@@ -809,7 +789,7 @@
 
         const deleteMessage = async (messageId) => {
             try {
-                await deleteDoc(doc(db, "messages", messageId));
+                await deleteDoc(doc(messagesCollection, messageId));
                 showToast('Recado apagado.');
             } catch (error) {
                 console.error("Erro ao apagar o recado: ", error);
@@ -929,7 +909,7 @@
                             const deleteBtn = document.createElement('button');
                             deleteBtn.innerHTML = '<i class="fa-solid fa-trash-can fa-xs"></i>';
                             deleteBtn.className = 'text-red-500 hover:text-red-700 transition flex-shrink-0 ml-2';
-                            deleteBtn.onclick = () => showConfirm("Apagar esta sugestão?", () => deleteDoc(doc(db, collection.id, data.id)));
+                            deleteBtn.onclick = () => showConfirm("Apagar esta sugestão?", () => deleteDoc(doc(collection, data.id)));
                             li.appendChild(deleteBtn);
                         }
                         listElement.appendChild(li);
@@ -937,9 +917,45 @@
                 }
             });
         };
+        
+        // --- AUTENTICAÇÃO E INICIALIZAÇÃO DOS LISTENERS ---
+        async function main() {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    submitButton.disabled = false;
+                    guestNameInput.disabled = false;
+                    guestMessageInput.disabled = false;
 
-        setupSongSuggestor('dj', djSongSearchInput, djSearchResults, djSongArtistInput, submitDjSongBtn, djSuggestionsList, djSuggestionsCollection);
-        setupSongSuggestor('band', bandSongSearchInput, bandSearchResults, bandSongArtistInput, submitBandSongBtn, bandRequestsList, bandRequestsCollection);
+                    if (!listenersAttached) {
+                        loadMessages();
+                        loadPhotos();
+                        setupSongSuggestor('dj', djSongSearchInput, djSearchResults, djSongArtistInput, submitDjSongBtn, djSuggestionsList, djSuggestionsCollection);
+                        setupSongSuggestor('band', bandSongSearchInput, bandSearchResults, bandSongArtistInput, submitBandSongBtn, bandRequestsList, bandRequestsCollection);
+                        listenersAttached = true;
+                    }
+                } else {
+                    currentUser = null;
+                    submitButton.disabled = true;
+                    guestNameInput.disabled = true;
+                    guestMessageInput.disabled = true;
+                }
+            });
+
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Falha na autenticação:", error);
+                loadingMessages.textContent = "Falha na autenticação. Não é possível carregar o conteúdo.";
+                loadingPhotos.textContent = "Falha na autenticação.";
+            }
+        }
+
+        main();
 
         // --- LÓGICA DO PIX COPIA E COLA ---
         copyPixButton.addEventListener('click', () => {
