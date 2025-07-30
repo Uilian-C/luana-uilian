@@ -213,18 +213,19 @@
         // Importações do Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
         // --- CONFIGURAÇÃO DO FIREBASE ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfqesuR8nIDYoXtLMvQQqzeHTFmAurLZA",
+            authDomain: "casamento-luana-uilian.firebaseapp.com",
+            projectId: "casamento-luana-uilian",
+            storageBucket: "casamento-luana-uilian.firebasestorage.app",
+            messagingSenderId: "305363486620",
+            appId: "1:305363486620:web:c67a274d6aedc3cce1ea59"
+        };
 
         // --- ELEMENTOS DO DOM ---
-        const messagesCollection = collection(db, `artifacts/${appId}/public/data/messages`);
         const messagesContainer = document.getElementById('messages-container');
         const guestNameInput = document.getElementById('guest-name');
         const guestMessageInput = document.getElementById('guest-message');
@@ -235,6 +236,18 @@
         const modal = document.getElementById('confirm-modal');
         const modalOk = document.getElementById('confirm-modal-ok');
         const modalCancel = document.getElementById('confirm-modal-cancel');
+
+        // Verificação para garantir que a configuração foi preenchida
+        if (!firebaseConfig.apiKey) {
+            loadingMessages.textContent = "Erro de configuração: As chaves do Firebase não foram adicionadas ao código.";
+            loadingMessages.classList.add('text-red-500', 'font-bold');
+            throw new Error("Configuração do Firebase não encontrada. Preencha o objeto 'firebaseConfig' no script.");
+        }
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const messagesCollection = collection(db, `messages`); // Simplificado o caminho
 
         let currentUser = null;
         let toastTimeout;
@@ -251,10 +264,7 @@
 
         const showConfirm = (onConfirm) => {
             modal.classList.remove('hidden');
-            const handleOk = () => {
-                onConfirm();
-                closeModal();
-            };
+            const handleOk = () => { onConfirm(); closeModal(); };
             const closeModal = () => {
                 modal.classList.add('hidden');
                 modalOk.removeEventListener('click', handleOk);
@@ -265,11 +275,8 @@
         };
 
         // --- LÓGICA DO MURAL DE RECADOS ---
-
-        // Listener que reage a mudanças no estado de autenticação
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log("Autenticação bem-sucedida. UID:", user.uid);
                 currentUser = user;
                 submitButton.disabled = false;
                 guestNameInput.disabled = false;
@@ -277,68 +284,31 @@
                 loadingMessages.textContent = "Carregando recados...";
                 loadMessages();
             } else {
-                console.log("Usuário deslogado.");
-                currentUser = null;
-                submitButton.disabled = true;
-                guestNameInput.disabled = true;
-                guestMessageInput.disabled = true;
+                signInAnonymously(auth).catch((error) => {
+                    console.error("Erro no login anônimo:", error);
+                    loadingMessages.textContent = "Falha na conexão com o mural.";
+                });
             }
         });
-        
-        // Função que inicia o processo de autenticação
-        const authenticate = async () => {
-            try {
-                const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                if (token) {
-                    console.log("Tentando login com token customizado.");
-                    await signInWithCustomToken(auth, token);
-                } else {
-                    console.log("Tentando login anônimo.");
-                    await signInAnonymously(auth);
-                }
-            } catch (error) {
-                console.error("Erro na autenticação do Firebase:", error);
-                showToast("Erro de autenticação. O mural não funcionará.");
-                loadingMessages.textContent = "Falha na conexão com o mural.";
-            }
-        };
-
-        // Inicia a autenticação assim que o script é carregado
-        authenticate();
-
 
         const loadMessages = () => {
-            if (!currentUser) return; // Segurança extra
-            
             const q = query(messagesCollection);
             onSnapshot(q, (snapshot) => {
-                if (snapshot.empty) {
-                    loadingMessages.textContent = "Nenhum recado ainda. Seja o primeiro!";
-                    loadingMessages.style.display = 'block';
-                } else {
-                    loadingMessages.style.display = 'none';
-                }
+                loadingMessages.style.display = snapshot.empty ? 'block' : 'none';
+                loadingMessages.textContent = "Nenhum recado ainda. Seja o primeiro!";
                 
-                const messages = [];
-                snapshot.forEach(docSnap => {
-                    messages.push({ id: docSnap.id, ...docSnap.data() });
-                });
-
+                const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 messages.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
 
                 messagesContainer.innerHTML = '';
                 if (messages.length === 0 && snapshot.empty) {
                     messagesContainer.appendChild(loadingMessages);
                 }
-
-                messages.forEach(messageData => {
-                    displayMessage(messageData, messageData.id);
-                });
+                messages.forEach(msg => displayMessage(msg, msg.id));
 
             }, (error) => {
                 console.error("Erro no listener do snapshot: ", error);
                 loadingMessages.textContent = "Não foi possível carregar os recados.";
-                loadingMessages.style.display = 'block';
                 showToast("Erro ao carregar recados.");
             });
         };
@@ -351,19 +321,13 @@
         const displayMessage = (data, id) => {
             const card = document.createElement('div');
             card.className = 'bg-white/80 p-6 rounded-lg shadow-md border-l-4 border-sage-green fade-in';
-            card.innerHTML = `
-                <p class="font-bold font-display text-xl text-olive-green">${data.name}</p>
-                <p class="text-sm text-dark-charcoal/50 mb-3">${formatDate(data.createdAt)}</p>
-                <p class="text-dark-charcoal/90 whitespace-pre-wrap">${data.message}</p>
-            `;
+            card.innerHTML = `<p class="font-bold font-display text-xl text-olive-green">${data.name}</p><p class="text-sm text-dark-charcoal/50 mb-3">${formatDate(data.createdAt)}</p><p class="text-dark-charcoal/90 whitespace-pre-wrap">${data.message}</p>`;
 
             if (currentUser && currentUser.uid === data.authorId) {
                 const deleteButton = document.createElement('button');
                 deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i> Apagar';
                 deleteButton.className = 'text-red-500 hover:text-red-700 text-xs mt-4 transition';
-                deleteButton.onclick = () => {
-                    showConfirm(() => deleteMessage(id));
-                };
+                deleteButton.onclick = () => showConfirm(() => deleteMessage(id));
                 card.appendChild(deleteButton);
             }
             messagesContainer.appendChild(card);
@@ -372,23 +336,11 @@
         submitButton.addEventListener('click', async () => {
             const name = guestNameInput.value.trim();
             const message = guestMessageInput.value.trim();
-
-            if (!name || !message) {
-                showToast('Por favor, preencha seu nome e o recado.');
-                return;
-            }
-            if (!currentUser) {
-                showToast('Aguarde um momento, estamos conectando...');
-                return;
-            }
+            if (!name || !message) return showToast('Por favor, preencha seu nome e o recado.');
+            if (!currentUser) return showToast('Aguarde um momento, estamos conectando...');
 
             try {
-                await addDoc(messagesCollection, {
-                    name: name,
-                    message: message,
-                    createdAt: serverTimestamp(),
-                    authorId: currentUser.uid
-                });
+                await addDoc(messagesCollection, { name, message, createdAt: serverTimestamp(), authorId: currentUser.uid });
                 guestMessageInput.value = '';
                 showToast('Seu recado foi enviado com sucesso!');
             } catch (error) {
@@ -399,15 +351,13 @@
 
         const deleteMessage = async (messageId) => {
             try {
-                const messageRef = doc(db, `artifacts/${appId}/public/data/messages`, messageId);
-                await deleteDoc(messageRef);
+                await deleteDoc(doc(db, "messages", messageId));
                 showToast('Recado apagado.');
             } catch (error) {
                 console.error("Erro ao apagar o recado: ", error);
                 showToast('Não foi possível apagar o recado.');
             }
         };
-
     </script>
     <script>
         // --- SCRIPT DO CONTADOR REGRESSIVO ---
