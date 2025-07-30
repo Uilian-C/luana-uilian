@@ -48,78 +48,10 @@
             font-family: 'Montserrat', 'sans-serif';
             color: #283618;
         }
-
-        /* Estilo para o modal de confirmação */
-        .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-        .modal-backdrop.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            text-align: center;
-            max-width: 90%;
-            width: 400px;
-            transform: scale(0.9);
-            transition: transform 0.3s;
-        }
-        .modal-backdrop.visible .modal-content {
-            transform: scale(1);
-        }
-        
-        /* Estilo para o loader de upload */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #588157;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .upload-indicator {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 0.5rem;
-        }
     </style>
 </head>
 <body class="bg-cream-white">
 
-    <!-- Modal de Confirmação para Exclusão -->
-    <div id="delete-confirm-modal" class="modal-backdrop">
-        <div class="modal-content">
-            <h3 id="modal-title" class="text-xl font-bold mb-4 text-dark-charcoal">Confirmar Exclusão</h3>
-            <p id="modal-text" class="mb-6 text-dark-charcoal/80">Você tem certeza que deseja apagar este item?</p>
-            <div class="flex justify-center gap-4">
-                <button id="confirm-delete-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-full transition duration-300">Sim, apagar</button>
-                <button id="cancel-delete-btn" class="bg-gray-300 hover:bg-gray-400 text-dark-charcoal font-bold py-2 px-6 rounded-full transition duration-300">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Header -->
     <header class="bg-gradient-to-br from-olive-green to-hunter-green text-cream-white text-center py-20 relative overflow-hidden">
         <div class="absolute inset-0 bg-black opacity-20"></div>
         <div class="relative z-10">
@@ -130,7 +62,6 @@
 
     <main class="container mx-auto px-6 py-12">
     
-        <!-- Contador Regressivo -->
         <section id="countdown" class="py-6 mb-14">
             <div class="text-center">
                 <h2 class="text-4xl font-display text-hunter-green mb-6">A contagem regressiva começou!</h2>
@@ -143,7 +74,6 @@
             </div>
         </section>
 
-        <!-- Informações do Evento -->
         <section id="info" class="mb-20 p-8 rounded-lg bg-white/70 shadow-xl backdrop-blur-sm fade-in">
             <h2 class="text-5xl font-display text-hunter-green text-center mb-10">O Grande Dia</h2>
             <div class="grid md:grid-cols-2 gap-10 items-start">
@@ -156,7 +86,6 @@
             </div>
         </section>
 
-        <!-- Presentes (PIX) -->
         <section id="presentes" class="mb-20 text-center bg-white/70 p-10 rounded-lg shadow-xl backdrop-blur-sm fade-in">
             <div class="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green mb-4 shadow-md"><i class="fa-solid fa-gift fa-2x text-cream-white"></i></div>
             <h2 class="text-5xl font-display text-hunter-green mb-4">Lista de Presentes</h2>
@@ -164,7 +93,6 @@
             <a href="https://geradordepix.com/pagamento/01JXQ8JAPQ23R1FN2QEQMJEWC1" target="_blank" class="cursor-pointer bg-olive-green hover:bg-hunter-green text-cream-white font-bold py-3 px-8 rounded-full transition duration-300 inline-block shadow-lg"><i class="fa-brands fa-pix mr-2"></i> Presentear com PIX</a>
         </section>
 
-        <!-- Manual dos Convidados -->
         <section id="manual" class="mb-20 fade-in">
             <h2 class="text-5xl font-display text-hunter-green text-center mb-10">Dicas dos Noivos</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
@@ -181,7 +109,6 @@
             </div>
         </section>
 
-        <!-- Dress Code -->
         <section id="dresscode" class="mb-20 text-center bg-white/70 p-10 rounded-lg shadow-xl backdrop-blur-sm fade-in">
             <div class="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green mb-4 shadow-md"><i class="fa-solid fa-shirt fa-2x text-cream-white"></i></div>
             <h2 class="text-5xl font-display text-hunter-green mb-4">Dress Code: Esporte Fino</h2>
@@ -192,7 +119,6 @@
             </div>
         </section>
 
-        <!-- Cronograma -->
         <section id="cronograma" class="mb-20 fade-in">
             <h2 class="text-5xl font-display text-hunter-green text-center mb-10">Nosso Dia, Passo a Passo</h2>
             <div class="max-w-3xl mx-auto">
@@ -205,22 +131,6 @@
             </div>
         </section>
         
-        <!-- Compartilhe suas fotos -->
-        <section id="fotos" class="mb-20 text-center bg-white/70 p-10 rounded-lg shadow-xl backdrop-blur-sm fade-in">
-            <h2 class="text-5xl font-display text-hunter-green mb-4">Mural de Memórias</h2>
-            <p class="max-w-2xl mx-auto text-lg mb-8">Seus registros tornarão nosso dia ainda mais especial! Compartilhe aqui suas fotos favoritas do nosso casamento.</p>
-            <div class="max-w-md mx-auto">
-                <label for="photo-upload" class="cursor-pointer bg-olive-green hover:bg-hunter-green text-cream-white font-bold py-3 px-8 rounded-full transition duration-300 inline-block shadow-lg">
-                    <i class="fas fa-camera-retro mr-2"></i> Enviar uma Foto
-                </label>
-                <input type="file" id="photo-upload" class="hidden" accept="image/*" multiple>
-            </div>
-            <div id="photo-preview-gallery" class="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <!-- As fotos do Firebase serão inseridas aqui -->
-            </div>
-        </section>
-        
-        <!-- Playlist -->
         <section id="playlist" class="mb-20 text-center fade-in">
             <h2 class="text-5xl font-display text-hunter-green mb-8">Nossa Trilha Sonora</h2>
             <p class="max-w-2xl mx-auto text-lg mb-8">Dê o play e entre no clima da nossa festa!</p>
@@ -229,225 +139,25 @@
             </div>
         </section>
 
-        <!-- Mural de Recados -->
-        <section id="mural" class="bg-white/70 p-10 rounded-lg shadow-xl backdrop-blur-sm fade-in">
-            <h2 class="text-5xl font-display text-hunter-green text-center mb-10">Mural de Recados</h2>
-            <form id="message-form" class="max-w-xl mx-auto mb-8">
-                <div class="mb-4"><input type="text" id="guest-name" placeholder="Seu nome" class="w-full p-3 rounded-md border border-sage-green focus:ring-2 focus:ring-olive-green focus:outline-none transition bg-cream-white/50" required></div>
-                <div class="mb-4"><textarea id="guest-message" placeholder="Deixe sua mensagem de carinho..." rows="4" class="w-full p-3 rounded-md border border-sage-green focus:ring-2 focus:ring-olive-green focus:outline-none transition bg-cream-white/50" required></textarea></div>
-                <div class="text-center">
-                    <button type="submit" class="bg-warm-beige hover:bg-opacity-80 text-white font-bold py-3 px-8 rounded-full transition duration-300 shadow-lg flex items-center justify-center mx-auto">
-                        <i class="fa-solid fa-paper-plane mr-2"></i>
-                        <span>Enviar Recado</span>
-                    </button>
-                </div>
-            </form>
-            <div id="messages-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- As mensagens do Firestore serão inseridas aqui -->
-            </div>
-        </section>
-
     </main>
 
-    <!-- Footer -->
     <footer class="bg-gradient-to-tr from-olive-green to-hunter-green text-cream-white text-center p-12 mt-20">
         <p class="font-script text-4xl">Com amor, Luana & Uilian</p>
         <p class="mt-2 font-display tracking-widest">20.09.2025</p>
     </footer>
 
-    <!-- Firebase SDKs -->
     <script type="module">
-        // Importações do Firebase
+        // Importações do Firebase - Apenas o necessário
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // Se você não usar mais NENHUM serviço do Firebase, pode remover todo o script.
+        // Se ainda for usar para outra coisa (ex: autenticação), mantenha o necessário.
 
         // --- CONFIGURAÇÃO DO FIREBASE ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
 
-        // Inicializa serviços do Firebase
+        // Inicializa o App do Firebase (se ainda for necessário para outras funcionalidades)
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
-        const auth = getAuth(app);
-
-        // Coleções no Firestore
-        const messagesCollection = collection(db, `/artifacts/${appId}/public/data/messages`);
-        const photosCollection = collection(db, `/artifacts/${appId}/public/data/photos`);
-
-        let currentUserId = null;
-        let itemToDelete = null; // { id, type, storagePath }
-
-        // --- AUTENTICAÇÃO ANÔNIMA ---
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUserId = user.uid;
-                loadMessages();
-                loadPhotos();
-            } else {
-                signInAnonymously(auth).catch((error) => console.error("Erro no login anônimo:", error));
-            }
-        });
-
-        // --- ELEMENTOS DO DOM ---
-        const messageForm = document.getElementById('message-form');
-        const messagesContainer = document.getElementById('messages-container');
-        const photoGallery = document.getElementById('photo-preview-gallery');
-        const modal = document.getElementById('delete-confirm-modal');
-        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
-        const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
-        
-        // --- LÓGICA DO MURAL DE RECADOS ---
-        messageForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const nameInput = document.getElementById('guest-name');
-            const messageInput = document.getElementById('guest-message');
-            const name = nameInput.value.trim();
-            const message = messageInput.value.trim();
-
-            if (!currentUserId || name === '' || message === '') {
-                 alert('Por favor, preencha seu nome e a mensagem.');
-                return;
-            }
-
-            try {
-                await addDoc(messagesCollection, { name, message, userId: currentUserId, createdAt: serverTimestamp() });
-                nameInput.value = '';
-                messageInput.value = '';
-            } catch (error) {
-                console.error("Erro ao adicionar mensagem:", error);
-                alert('Ocorreu um erro ao enviar sua mensagem.');
-            }
-        });
-
-        const createMessageCard = (docData) => {
-            const { id, name, message, userId } = docData;
-            const card = document.createElement('div');
-            card.className = 'relative bg-cream-white/80 p-6 rounded-lg shadow-md fade-in';
-            const sanitizedMessage = message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            const sanitizedName = name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            
-            let deleteBtnHTML = '';
-            if (currentUserId === userId) {
-                deleteBtnHTML = `<button class="delete-btn absolute top-2 right-3 text-red-400 hover:text-red-600" data-id="${id}" data-type="message"><i class="fa-solid fa-trash-can"></i></button>`;
-            }
-            
-            card.innerHTML = `${deleteBtnHTML}<p class="text-dark-charcoal/80 mb-2 pr-4">"${sanitizedMessage}"</p><strong class="font-display text-lg text-olive-green">- ${sanitizedName}</strong>`;
-            return card;
-        };
-
-        const loadMessages = () => {
-            onSnapshot(messagesCollection, (snapshot) => {
-                messagesContainer.innerHTML = '';
-                snapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() }))
-                    .sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0))
-                    .forEach(docData => messagesContainer.appendChild(createMessageCard(docData)));
-            });
-        };
-
-        // --- LÓGICA DA GALERIA DE FOTOS ---
-        document.getElementById('photo-upload').addEventListener('change', (e) => {
-            const files = e.target.files;
-            if (!currentUserId || !files.length) return;
-
-            for (const file of files) {
-                handlePhotoUpload(file);
-            }
-            e.target.value = ''; // Reset input
-        });
-
-        const handlePhotoUpload = async (file) => {
-            const tempId = `temp_${Date.now()}`;
-            const loaderHTML = `<div id="${tempId}" class="relative w-full h-48 rounded-lg overflow-hidden shadow-md upload-indicator"><div class="loader"></div></div>`;
-            photoGallery.insertAdjacentHTML('afterbegin', loaderHTML);
-
-            const filePath = `wedding_photos/${currentUserId}_${Date.now()}_${file.name}`;
-            const storageRef = ref(storage, filePath);
-
-            try {
-                await uploadBytes(storageRef, file);
-                const url = await getDownloadURL(storageRef);
-                await addDoc(photosCollection, {
-                    imageUrl: url,
-                    storagePath: filePath,
-                    userId: currentUserId,
-                    createdAt: serverTimestamp()
-                });
-            } catch (error) {
-                console.error("Erro no upload da foto:", error);
-            } finally {
-                 document.getElementById(tempId)?.remove();
-            }
-        };
-        
-        const createPhotoCard = (docData) => {
-            const { id, imageUrl, storagePath, userId } = docData;
-            const card = document.createElement('div');
-            card.className = 'relative w-full h-48 rounded-lg overflow-hidden shadow-md fade-in group';
-            
-            let deleteBtnHTML = '';
-            if (currentUserId === userId) {
-                deleteBtnHTML = `<button class="delete-btn absolute top-2 right-2 bg-black/50 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-500 transition-all duration-300" data-id="${id}" data-type="photo" data-path="${storagePath}"><i class="fa-solid fa-trash-can fa-sm"></i></button>`;
-            }
-
-            card.innerHTML = `${deleteBtnHTML}<img src="${imageUrl}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" alt="Foto do casamento">`;
-            return card;
-        };
-
-        const loadPhotos = () => {
-            onSnapshot(photosCollection, (snapshot) => {
-                photoGallery.innerHTML = '';
-                snapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() }))
-                    .sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0))
-                    .forEach(docData => photoGallery.appendChild(createPhotoCard(docData)));
-            });
-        };
-
-        // --- LÓGICA DE EXCLUSÃO COM MODAL ---
-        const openDeleteModal = (id, type, path = null) => {
-            itemToDelete = { id, type, storagePath: path };
-            document.getElementById('modal-title').textContent = `Apagar ${type === 'message' ? 'Recado' : 'Foto'}`;
-            document.getElementById('modal-text').textContent = `Você tem certeza que deseja apagar est${type === 'message' ? 'e recado' : 'a foto'}? Esta ação não pode ser desfeita.`;
-            modal.classList.add('visible');
-        };
-
-        const closeModal = () => {
-            modal.classList.remove('visible');
-            itemToDelete = null;
-        };
-
-        document.addEventListener('click', (e) => {
-            const deleteButton = e.target.closest('.delete-btn');
-            if (deleteButton) {
-                const { id, type, path } = deleteButton.dataset;
-                openDeleteModal(id, type, path);
-            }
-        });
-
-        cancelDeleteBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-
-        confirmDeleteBtn.addEventListener('click', async () => {
-            if (!itemToDelete) return;
-            const { id, type, storagePath } = itemToDelete;
-            const collectionRef = type === 'message' ? messagesCollection : photosCollection;
-            
-            try {
-                await deleteDoc(doc(collectionRef, id));
-                if (type === 'photo' && storagePath) {
-                    await deleteObject(ref(storage, storagePath));
-                }
-            } catch (error) {
-                console.error("Erro ao apagar item:", error);
-                alert('Ocorreu um erro ao apagar o item.');
-            } finally {
-                closeModal();
-            }
-        });
 
     </script>
     <script>
@@ -474,4 +184,3 @@
 
 </body>
 </html>
-
