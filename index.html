@@ -279,7 +279,8 @@
                     <div class="bg-cream-white/50 p-4 rounded-lg">
                         <p class="text-sm text-center mb-4">Qual música não pode faltar na festa? Deixe sua sugestão para o DJ!</p>
                         <div class="relative">
-                            <input id="dj-song-search" type="text" placeholder="Comece a digitar o nome da música..." class="w-full p-2 mb-2 rounded border border-sage-green">
+                            <input id="dj-song-search" type="text" placeholder="Digite o nome da música para buscar..." class="w-full p-2 mb-2 rounded border border-sage-green">
+                             <p class="text-xs text-center text-dark-charcoal/60 -mt-1 mb-3">Selecione a música na lista de resultados.</p>
                             <div id="dj-search-results" class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-lg max-h-48 overflow-y-auto hidden"></div>
                         </div>
                         <input id="dj-song-artist" type="text" placeholder="Artista / Banda" class="w-full p-2 mb-3 rounded border border-sage-green" readonly>
@@ -293,7 +294,8 @@
                      <div class="bg-cream-white/50 p-4 rounded-lg">
                         <p class="text-sm text-center mb-4">Quer ouvir a banda tocar aquela música especial? Peça aqui!</p>
                          <div class="relative">
-                            <input id="band-song-search" type="text" placeholder="Comece a digitar o nome da música..." class="w-full p-2 mb-2 rounded border border-sage-green">
+                            <input id="band-song-search" type="text" placeholder="Digite o nome da música para buscar..." class="w-full p-2 mb-2 rounded border border-sage-green">
+                             <p class="text-xs text-center text-dark-charcoal/60 -mt-1 mb-3">Selecione a música na lista de resultados.</p>
                             <div id="band-search-results" class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-lg max-h-48 overflow-y-auto hidden"></div>
                         </div>
                         <input id="band-song-artist" type="text" placeholder="Artista / Banda" class="w-full p-2 mb-3 rounded border border-sage-green" readonly>
@@ -830,11 +832,18 @@
                         data.results.forEach(song => {
                             const item = document.createElement('div');
                             item.className = 'p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2';
-                            item.innerHTML = `<img src="${song.artworkUrl60}" class="w-10 h-10 rounded"> <div><p class="font-bold text-sm">${song.trackName}</p><p class="text-xs">${song.artistName}</p></div>`;
+                            item.innerHTML = `
+                                <img src="${song.artworkUrl60}" class="w-10 h-10 rounded">
+                                <div class="overflow-hidden">
+                                    <p class="font-bold text-sm truncate">${song.trackName}</p>
+                                    <p class="text-xs truncate">${song.artistName}</p>
+                                    <p class="text-xs text-dark-charcoal/60 truncate">${song.collectionName || ''}</p>
+                                </div>
+                            `;
                             item.onclick = () => {
                                 searchInput.value = song.trackName;
                                 artistInput.value = song.artistName;
-                                selectedSong = { trackId: song.trackId, trackName: song.trackName, artistName: song.artistName, artworkUrl: song.artworkUrl60 };
+                                selectedSong = { trackId: song.trackId, trackName: song.trackName, artistName: song.artistName, artworkUrl: song.artworkUrl60, collectionName: song.collectionName };
                                 searchResults.classList.add('hidden');
                                 submitBtn.disabled = false;
                             };
