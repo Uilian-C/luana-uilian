@@ -51,24 +51,56 @@
         }
 
         /* Estilo para a barra de rolagem dos recados */
-        #messages-container::-webkit-scrollbar {
+        #messages-container::-webkit-scrollbar, #photo-gallery::-webkit-scrollbar {
             width: 8px;
         }
-        #messages-container::-webkit-scrollbar-track {
+        #messages-container::-webkit-scrollbar-track, #photo-gallery::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 10px;
         }
-        #messages-container::-webkit-scrollbar-thumb {
+        #messages-container::-webkit-scrollbar-thumb, #photo-gallery::-webkit-scrollbar-thumb {
             background: #A3B18A;
             border-radius: 10px;
         }
-        #messages-container::-webkit-scrollbar-thumb:hover {
+        #messages-container::-webkit-scrollbar-thumb:hover, #photo-gallery::-webkit-scrollbar-thumb:hover {
             background: #588157;
         }
         
         /* Estilo para a notificação (Toast) */
         #toast-notification.show {
             transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Estilos para o Modal da Galeria */
+        #photo-modal {
+            transition: opacity 0.3s ease;
+        }
+        #photo-modal img {
+            transition: transform 0.3s ease;
+            max-width: 90vw;
+            max-height: 85vh;
+        }
+        .gallery-item {
+            position: relative;
+        }
+        .delete-photo-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+        .gallery-item:hover .delete-photo-btn {
             opacity: 1;
         }
     </style>
@@ -83,7 +115,7 @@
         </div>
     </header>
 
-    <main class="container mx-auto px-6 py-12">
+    <main class="container mx-auto px-6 py-12 max-w-5xl">
     
         <section id="countdown" class="py-6 mb-14">
             <div class="text-center">
@@ -116,7 +148,7 @@
             <div class="flex flex-col md:flex-row items-center justify-center gap-8 mt-8">
                 <!-- QR Code -->
                 <div class="text-center">
-                    <img src="http://googleusercontent.com/file_content/1" alt="QR Code PIX" class="w-48 h-48 rounded-lg shadow-lg mx-auto border-4 border-white">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=192x192&data=00020126580014BR.GOV.BCB.PIX0136d39ae767-90b6-424b-bb11-503342731bc25204000053039865802BR5901N6001C62170513LUANAS2UILIAN6304DE3C" alt="QR Code PIX" class="w-48 h-48 rounded-lg shadow-lg mx-auto border-4 border-white">
                     <p class="mt-2 text-sm text-dark-charcoal/70">Escaneie o QR Code</p>
                 </div>
                 <!-- Separator -->
@@ -139,7 +171,7 @@
 
         <section id="manual" class="mb-20 fade-in">
             <h2 class="text-5xl font-display text-hunter-green text-center mb-10">Dicas dos Noivos</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 justify-center">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
                 <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-users-slash fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Convidado não convida</p></div>
                 <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-clock fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Seja pontual</p></div>
                 <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-user-tie fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Traje: Esporte Fino</p></div>
@@ -148,7 +180,7 @@
                 <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-seedling fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Não leve a decoração</p></div>
                 <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-cookie-bite fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Aguarde os doces</p></div>
                 <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-champagne-glasses fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Aproveite muito!</p></div>
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-hand-holding-heart fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Despeça-se dos noivos</p></div>
+                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 col-span-2 sm:col-span-1 lg:col-auto"><i class="fa-solid fa-hand-holding-heart fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Despeça-se dos noivos</p></div>
             </div>
         </section>
 
@@ -165,7 +197,6 @@
         <section id="cronograma" class="mb-20 fade-in">
             <h2 class="text-5xl font-display text-hunter-green text-center mb-10">Nosso Dia, Passo a Passo</h2>
             <div class="max-w-3xl mx-auto">
-                <div class="relative border-l-2 border-sage-green pl-10 py-4"><div class="absolute w-5 h-5 bg-olive-green rounded-full -left-[11px] top-5 border-4 border-cream-white"></div><p class="font-bold text-xl text-olive-green font-display">13:00 - Recepção dos Hóspedes</p><p class="text-dark-charcoal/80">Para quem for se hospedar, entrega das chaves e acomodação.</p></div>
                 <div class="relative border-l-2 border-sage-green pl-10 py-4"><div class="absolute w-5 h-5 bg-olive-green rounded-full -left-[11px] top-5 border-4 border-cream-white"></div><p class="font-bold text-xl text-olive-green font-display">14:00 - Início da Celebração</p><p class="text-dark-charcoal/80">Recepção de todos os convidados com DJ e buffet de entradinhas.</p></div>
                 <div class="relative border-l-2 border-sage-green pl-10 py-4"><div class="absolute w-5 h-5 bg-olive-green rounded-full -left-[11px] top-5 border-4 border-cream-white"></div><p class="font-bold text-xl text-olive-green font-display">14:30 - Cerimônia</p><p class="text-dark-charcoal/80">A emocionante entrada dos noivos e a celebração do nosso amor.</p></div>
                 <div class="relative border-l-2 border-sage-green pl-10 py-4"><div class="absolute w-5 h-5 bg-olive-green rounded-full -left-[11px] top-5 border-4 border-cream-white"></div><p class="font-bold text-xl text-olive-green font-display">14:45 - Almoço</p><p class="text-dark-charcoal/80">Hora de saborear as delícias preparadas com carinho.</p></div>
@@ -185,10 +216,21 @@
         <section id="photos" class="mb-20 text-center bg-white/70 p-10 rounded-lg shadow-xl backdrop-blur-sm fade-in">
             <div class="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green mb-4 shadow-md"><i class="fa-solid fa-images fa-2x text-cream-white"></i></div>
             <h2 class="text-5xl font-display text-hunter-green mb-4">Nossas Memórias</h2>
-            <p class="max-w-2xl mx-auto text-lg mb-8 text-dark-charcoal/80">Compartilhe seus registros do nosso grande dia! Acesse nosso álbum compartilhado para ver as fotos e adicionar as suas.</p>
-            <a href="https://photos.app.goo.gl/mFiMCHeZTb7X8Sf79" target="_blank" rel="noopener noreferrer" class="cursor-pointer bg-warm-beige hover:bg-opacity-80 text-dark-charcoal font-bold py-3 px-8 rounded-full transition duration-300 inline-block shadow-lg">
-                <i class="fa-brands fa-google-photos mr-2"></i>Acessar Álbum de Fotos
-            </a>
+            <p class="max-w-2xl mx-auto text-lg mb-8 text-dark-charcoal/80">Compartilhe seus registros do nosso grande dia! Envie suas fotos e ajude a construir nosso álbum colaborativo.</p>
+            
+            <div class="mb-8">
+                <label for="photo-upload" class="cursor-pointer bg-warm-beige hover:bg-opacity-80 text-dark-charcoal font-bold py-3 px-8 rounded-full transition duration-300 inline-block shadow-lg">
+                    <i class="fa-solid fa-camera-retro mr-2"></i>Enviar Foto
+                </label>
+                <input type="file" id="photo-upload" class="hidden" accept="image/*">
+                <div id="upload-progress-bar" class="w-full bg-gray-200 rounded-full h-2.5 mt-4 hidden">
+                    <div id="upload-progress" class="bg-olive-green h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="photo-gallery" class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-8 min-h-[150px]">
+                <p id="loading-photos" class="col-span-full text-center text-dark-charcoal/60">Carregando fotos...</p>
+            </div>
         </section>
 
         <!-- NOVA SEÇÃO: MURAL DE RECADOS -->
@@ -223,6 +265,12 @@
         <p class="mt-2 font-display tracking-widest">20.09.2025</p>
     </footer>
 
+    <!-- Modal para Fotos -->
+    <div id="photo-modal" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 hidden opacity-0" onclick="this.classList.add('hidden', 'opacity-0')">
+        <img id="modal-image" src="" alt="Foto em destaque" class="rounded-lg shadow-2xl transform scale-95">
+        <button class="absolute top-5 right-5 text-white text-4xl">&times;</button>
+    </div>
+
     <!-- Elementos para Notificações e Confirmações -->
     <div id="toast-notification" class="fixed bottom-5 right-5 bg-hunter-green text-cream-white py-3 px-6 rounded-lg shadow-xl transition-transform transform translate-y-20 opacity-0 z-50">
         <p id="toast-text"></p>
@@ -242,15 +290,16 @@
     <script type="module">
         // Importações do Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, doc, deleteDoc, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
         // --- CONFIGURAÇÃO DO FIREBASE ---
         const firebaseConfig = {
             apiKey: "AIzaSyCfqesuR8nIDYoXtLMvQQqzeHTFmAurLZA",
             authDomain: "casamento-luana-uilian.firebaseapp.com",
             projectId: "casamento-luana-uilian",
-            storageBucket: "casamento-luana-uilian.firebasestorage.app",
+            storageBucket: "casamento-luana-uilian.appspot.com", // Corrigido para .appspot.com
             messagingSenderId: "305363486620",
             appId: "1:305363486620:web:c67a274d6aedc3cce1ea59"
         };
@@ -268,6 +317,14 @@
         const modalCancel = document.getElementById('confirm-modal-cancel');
         const copyPixButton = document.getElementById('copy-pix-button');
         const pixCodeInput = document.getElementById('pix-code');
+        const photoGallery = document.getElementById('photo-gallery');
+        const photoModal = document.getElementById('photo-modal');
+        const modalImage = document.getElementById('modal-image');
+        const photoUploadInput = document.getElementById('photo-upload');
+        const uploadProgressBar = document.getElementById('upload-progress-bar');
+        const uploadProgress = document.getElementById('upload-progress');
+        const loadingPhotos = document.getElementById('loading-photos');
+
 
         // Verificação para garantir que a configuração foi preenchida
         if (!firebaseConfig.apiKey) {
@@ -279,7 +336,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        const messagesCollection = collection(db, `messages`); // Simplificado o caminho
+        const storage = getStorage(app);
+        const messagesCollection = collection(db, `messages`);
+        const photosCollection = collection(db, 'photos');
 
         let currentUser = null;
         let toastTimeout;
@@ -294,7 +353,8 @@
             }, 3000);
         };
 
-        const showConfirm = (onConfirm) => {
+        const showConfirm = (text, onConfirm) => {
+            document.getElementById('confirm-modal-text').textContent = text;
             modal.classList.remove('hidden');
             const handleOk = () => { onConfirm(); closeModal(); };
             const closeModal = () => {
@@ -306,6 +366,122 @@
             modalCancel.addEventListener('click', closeModal);
         };
 
+        // --- LÓGICA DA GALERIA DE FOTOS ---
+        photoUploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            uploadPhoto(file);
+        });
+
+        const uploadPhoto = (file) => {
+            if (!currentUser) {
+                showToast("Você precisa estar conectado para enviar fotos.");
+                return;
+            }
+            if (!file.type.startsWith('image/')) {
+                showToast("Por favor, selecione um arquivo de imagem.");
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                showToast("A foto é muito grande! O limite é 5MB.");
+                return;
+            }
+
+            const photoId = `${new Date().getTime()}-${file.name}`;
+            const storageRef = ref(storage, `photos/${photoId}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadProgressBar.classList.remove('hidden');
+
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    uploadProgress.style.width = progress + '%';
+                }, 
+                (error) => {
+                    console.error("Erro no upload:", error);
+                    showToast("Ocorreu um erro ao enviar a foto.");
+                    uploadProgressBar.classList.add('hidden');
+                }, 
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        addDoc(photosCollection, {
+                            imageUrl: downloadURL,
+                            storagePath: storageRef.fullPath,
+                            authorId: currentUser.uid,
+                            createdAt: serverTimestamp()
+                        });
+                        showToast("Foto enviada com sucesso!");
+                        uploadProgressBar.classList.add('hidden');
+                        photoUploadInput.value = ''; // Limpa o input
+                    });
+                }
+            );
+        };
+
+        const loadPhotos = () => {
+            const q = query(photosCollection, orderBy('createdAt', 'desc'));
+            onSnapshot(q, (snapshot) => {
+                if (snapshot.empty) {
+                    loadingPhotos.textContent = "Nenhuma foto ainda. Seja o primeiro a enviar!";
+                    loadingPhotos.style.display = 'block';
+                } else {
+                    loadingPhotos.style.display = 'none';
+                }
+                
+                photoGallery.innerHTML = ''; // Limpa a galeria
+                snapshot.forEach((doc) => {
+                    const photo = doc.data();
+                    const photoEl = document.createElement('div');
+                    photoEl.className = 'gallery-item cursor-pointer rounded-lg shadow-md w-full h-full object-cover aspect-[3/4] hover:scale-105 transition-transform duration-300';
+                    
+                    const img = document.createElement('img');
+                    img.src = photo.imageUrl;
+                    img.alt = "Foto do casamento";
+                    img.className = "w-full h-full object-cover rounded-lg";
+                    img.onclick = () => {
+                        modalImage.src = photo.imageUrl;
+                        photoModal.classList.remove('hidden', 'opacity-0');
+                        setTimeout(() => modalImage.style.transform = 'scale(1)', 0);
+                    };
+                    photoEl.appendChild(img);
+
+                    if (currentUser && currentUser.uid === photo.authorId) {
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'delete-photo-btn';
+                        deleteBtn.innerHTML = '<i class="fa-solid fa-trash-can fa-sm"></i>';
+                        deleteBtn.onclick = (e) => {
+                            e.stopPropagation(); // Impede que o modal da foto abra
+                            showConfirm("Tem certeza que deseja apagar esta foto?", () => deletePhoto(doc.id, photo.storagePath));
+                        };
+                        photoEl.appendChild(deleteBtn);
+                    }
+                    photoGallery.appendChild(photoEl);
+                });
+            });
+        };
+
+        const deletePhoto = async (docId, storagePath) => {
+            const photoRef = ref(storage, storagePath);
+            try {
+                // Deleta do Storage e depois do Firestore
+                await deleteObject(photoRef);
+                await deleteDoc(doc(db, "photos", docId));
+                showToast("Foto apagada com sucesso!");
+            } catch (error) {
+                console.error("Erro ao apagar a foto:", error);
+                showToast("Não foi possível apagar a foto.");
+            }
+        };
+
+        photoModal.addEventListener('click', () => {
+            modalImage.style.transform = 'scale(0.95)';
+            photoModal.classList.add('opacity-0');
+            setTimeout(() => {
+                photoModal.classList.add('hidden');
+            }, 300);
+        });
+
         // --- LÓGICA DO MURAL DE RECADOS ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -315,6 +491,7 @@
                 guestMessageInput.disabled = false;
                 loadingMessages.textContent = "Carregando recados...";
                 loadMessages();
+                loadPhotos(); // Carrega as fotos também
             } else {
                 signInAnonymously(auth).catch((error) => {
                     console.error("Erro no login anônimo:", error);
@@ -324,14 +501,13 @@
         });
 
         const loadMessages = () => {
-            const q = query(messagesCollection);
+            const q = query(messagesCollection, orderBy('createdAt', 'desc'));
             onSnapshot(q, (snapshot) => {
                 loadingMessages.style.display = snapshot.empty ? 'block' : 'none';
                 loadingMessages.textContent = "Nenhum recado ainda. Seja o primeiro!";
                 
                 const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                messages.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
-
+                
                 messagesContainer.innerHTML = '';
                 if (messages.length === 0 && snapshot.empty) {
                     messagesContainer.appendChild(loadingMessages);
@@ -359,7 +535,7 @@
                 const deleteButton = document.createElement('button');
                 deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i> Apagar';
                 deleteButton.className = 'text-red-500 hover:text-red-700 text-xs mt-4 transition';
-                deleteButton.onclick = () => showConfirm(() => deleteMessage(id));
+                deleteButton.onclick = () => showConfirm("Tem certeza que deseja apagar este recado?", () => deleteMessage(id));
                 card.appendChild(deleteButton);
             }
             messagesContainer.appendChild(card);
@@ -395,7 +571,6 @@
         copyPixButton.addEventListener('click', () => {
             const textToCopy = pixCodeInput.value;
             
-            // Cria um elemento de texto temporário para copiar
             const tempInput = document.createElement('textarea');
             tempInput.value = textToCopy;
             document.body.appendChild(tempInput);
