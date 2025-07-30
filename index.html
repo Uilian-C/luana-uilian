@@ -41,6 +41,17 @@
             animation: fadeIn 0.8s ease-out forwards;
         }
 
+        /* Animação para frases */
+        @keyframes fade-in-out {
+            0% { opacity: 0; transform: translateY(10px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
+        .phrase-animation {
+            animation: fade-in-out 7s ease-in-out forwards;
+        }
+
         /* Fundo com temática de casamento */
         body {
             background-color: #FEFAE0;
@@ -103,11 +114,33 @@
         .gallery-item:hover .delete-photo-btn {
             opacity: 1;
         }
+
+        /* Estilo para esconder a barra de rolagem da galeria */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* Canvas para Confetes */
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            pointer-events: none;
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-cream-white">
 
     <header class="bg-gradient-to-br from-olive-green to-hunter-green text-cream-white text-center py-20 relative overflow-hidden">
+        <canvas id="confetti-canvas"></canvas>
         <div class="absolute inset-0 bg-black opacity-20"></div>
         <div class="relative z-10">
             <h1 class="text-8xl md:text-9xl font-title">Luana & Uilian</h1>
@@ -126,6 +159,9 @@
                     <div class="bg-white/60 p-4 rounded-lg shadow-lg backdrop-blur-sm"><div id="minutes" class="text-5xl font-bold">00</div><div class="text-lg font-display">Minutos</div></div>
                     <div class="bg-white/60 p-4 rounded-lg shadow-lg backdrop-blur-sm"><div id="seconds" class="text-5xl font-bold">00</div><div class="text-lg font-display">Segundos</div></div>
                 </div>
+                <div id="phrase-container" class="mt-6 h-8 flex items-center justify-center">
+                    <p id="wedding-phrase" class="text-lg font-display text-dark-charcoal/70 italic"></p>
+                </div>
             </div>
         </section>
 
@@ -133,7 +169,18 @@
             <h2 class="text-5xl font-display text-hunter-green text-center mb-10">O Grande Dia</h2>
             <div class="grid md:grid-cols-2 gap-10 items-start">
                 <div class="flex flex-col space-y-8">
-                    <div class="flex items-center"><div class="w-16 h-16 flex-shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green shadow-md mr-4"><i class="fa-solid fa-calendar-days fa-2x text-cream-white"></i></div><div><h3 class="text-2xl font-display text-hunter-green">Data & Hora</h3><p class="text-lg">20 de Setembro de 2025 às 14:00</p></div></div>
+                    <div>
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 flex-shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green shadow-md mr-4"><i class="fa-solid fa-calendar-days fa-2x text-cream-white"></i></div>
+                            <div>
+                                <h3 class="text-2xl font-display text-hunter-green">Data & Hora</h3>
+                                <p class="text-lg">20 de Setembro de 2025 às 14:00</p>
+                            </div>
+                        </div>
+                        <button id="save-to-calendar" class="mt-4 ml-20 bg-olive-green hover:bg-hunter-green text-cream-white text-sm font-bold py-2 px-4 rounded-full transition duration-300 shadow-lg">
+                            <i class="fa-solid fa-calendar-plus mr-2"></i>Salvar na Agenda
+                        </button>
+                    </div>
                     <div class="flex items-center"><div class="w-16 h-16 flex-shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green shadow-md mr-4"><i class="fa-solid fa-cloud-sun-rain fa-2x text-cream-white"></i></div><div><h3 class="text-2xl font-display text-hunter-green">Previsão do Tempo</h3><p class="text-lg">Dia agradável e ensolarado.<br>Min: 15°C | Máx: 26°C</p></div></div>
                     <div class="flex items-center"><div class="w-16 h-16 flex-shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green shadow-md mr-4"><i class="fa-solid fa-map-location-dot fa-2x text-cream-white"></i></div><div><h3 class="text-2xl font-display text-hunter-green">Localização</h3><p class="text-lg">Alameda dos Abacaxis, 16<br>Ibiúna, SP, 18152-279</p></div></div>
                 </div>
@@ -222,13 +269,23 @@
                     <i class="fa-solid fa-camera-retro mr-2"></i>Enviar Foto
                 </label>
                 <input type="file" id="photo-upload" class="hidden" accept="image/*">
-                <div id="upload-progress-bar" class="w-full bg-gray-200 rounded-full h-2.5 mt-4 hidden">
+                <div id="upload-progress-bar" class="w-full bg-gray-200 rounded-full h-2.5 mt-4 hidden max-w-md mx-auto">
                     <div id="upload-progress" class="bg-olive-green h-2.5 rounded-full" style="width: 0%"></div>
                 </div>
             </div>
 
-            <div id="photo-gallery" class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-8 min-h-[150px]">
-                <p id="loading-photos" class="col-span-full text-center text-dark-charcoal/60">Carregando fotos...</p>
+            <div class="relative max-w-4xl mx-auto">
+                <div id="photo-gallery-container" class="overflow-x-auto scroll-smooth scrollbar-hide">
+                    <div id="photo-gallery" class="flex gap-4 p-2 min-h-[272px] items-center">
+                        <p id="loading-photos" class="w-full text-center text-dark-charcoal/60">Carregando fotos...</p>
+                    </div>
+                </div>
+                <button id="scroll-left-btn" class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white/60 backdrop-blur-sm rounded-full shadow-md hover:bg-white/90 transition z-20 hidden md:flex items-center justify-center w-10 h-10">
+                    <i class="fa-solid fa-chevron-left text-hunter-green"></i>
+                </button>
+                <button id="scroll-right-btn" class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white/60 backdrop-blur-sm rounded-full shadow-md hover:bg-white/90 transition z-20 hidden md:flex items-center justify-center w-10 h-10">
+                    <i class="fa-solid fa-chevron-right text-hunter-green"></i>
+                </button>
             </div>
         </section>
 
@@ -264,6 +321,16 @@
         <p class="mt-2 font-display tracking-widest">20.09.2025</p>
     </footer>
 
+    <!-- Botão de Música -->
+    <button id="music-toggle" class="fixed bottom-5 right-5 w-12 h-12 bg-olive-green/80 backdrop-blur-sm text-cream-white rounded-full shadow-lg flex items-center justify-center z-40 hover:bg-olive-green transition">
+        <i id="music-icon" class="fa-solid fa-music"></i>
+    </button>
+    <!-- Player de Áudio -->
+    <audio id="background-music" loop>
+        <!-- IMPORTANTE: Substitua o 'src' pelo link do seu arquivo de música .mp3 -->
+        <source src="https://storage.googleapis.com/gemini-web-assets/2024/07/wedding-music-placeholder.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- Modal para Fotos -->
     <div id="photo-modal" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 hidden opacity-0" onclick="this.classList.add('hidden', 'opacity-0')">
         <img id="modal-image" src="" alt="Foto em destaque" class="rounded-lg shadow-2xl transform scale-95">
@@ -298,7 +365,7 @@
             apiKey: "AIzaSyCfqesuR8nIDYoXtLMvQQqzeHTFmAurLZA",
             authDomain: "casamento-luana-uilian.firebaseapp.com",
             projectId: "casamento-luana-uilian",
-            storageBucket: "casamento-luana-uilian.firebasestorage.app", // CORRIGIDO
+            storageBucket: "casamento-luana-uilian.firebasestorage.app",
             messagingSenderId: "305363486620",
             appId: "1:305363486620:web:c67a274d6aedc3cce1ea59"
         };
@@ -316,6 +383,7 @@
         const modalCancel = document.getElementById('confirm-modal-cancel');
         const copyPixButton = document.getElementById('copy-pix-button');
         const pixCodeInput = document.getElementById('pix-code');
+        const photoGalleryContainer = document.getElementById('photo-gallery-container');
         const photoGallery = document.getElementById('photo-gallery');
         const photoModal = document.getElementById('photo-modal');
         const modalImage = document.getElementById('modal-image');
@@ -323,6 +391,14 @@
         const uploadProgressBar = document.getElementById('upload-progress-bar');
         const uploadProgress = document.getElementById('upload-progress');
         const loadingPhotos = document.getElementById('loading-photos');
+        const scrollLeftBtn = document.getElementById('scroll-left-btn');
+        const scrollRightBtn = document.getElementById('scroll-right-btn');
+        const saveToCalendarBtn = document.getElementById('save-to-calendar');
+        const musicToggle = document.getElementById('music-toggle');
+        const musicIcon = document.getElementById('music-icon');
+        const backgroundMusic = document.getElementById('background-music');
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const weddingPhraseEl = document.getElementById('wedding-phrase');
 
 
         // Verificação para garantir que a configuração foi preenchida
@@ -424,6 +500,7 @@
                 if (snapshot.empty) {
                     loadingPhotos.textContent = "Nenhuma foto ainda. Seja o primeiro a enviar!";
                     loadingPhotos.style.display = 'block';
+                    checkScrollButtons();
                 } else {
                     loadingPhotos.style.display = 'none';
                 }
@@ -432,12 +509,12 @@
                 snapshot.forEach((doc) => {
                     const photo = doc.data();
                     const photoEl = document.createElement('div');
-                    photoEl.className = 'gallery-item cursor-pointer rounded-lg shadow-md w-full h-full object-cover aspect-[3/4] hover:scale-105 transition-transform duration-300';
+                    photoEl.className = 'gallery-item relative flex-shrink-0 w-48 h-64 rounded-lg shadow-md hover:scale-105 transition-transform duration-300';
                     
                     const img = document.createElement('img');
                     img.src = photo.imageUrl;
                     img.alt = "Foto do casamento";
-                    img.className = "w-full h-full object-cover rounded-lg";
+                    img.className = "w-full h-full object-cover rounded-lg cursor-pointer";
                     img.onclick = () => {
                         modalImage.src = photo.imageUrl;
                         photoModal.classList.remove('hidden', 'opacity-0');
@@ -457,6 +534,7 @@
                     }
                     photoGallery.appendChild(photoEl);
                 });
+                setTimeout(checkScrollButtons, 100);
             });
         };
 
@@ -480,6 +558,24 @@
                 photoModal.classList.add('hidden');
             }, 300);
         });
+        
+        const checkScrollButtons = () => {
+            const container = photoGalleryContainer;
+            const hasOverflow = container.scrollWidth > container.clientWidth;
+            scrollLeftBtn.classList.toggle('hidden', !hasOverflow || container.scrollLeft === 0);
+            scrollRightBtn.classList.toggle('hidden', !hasOverflow || container.scrollLeft + container.clientWidth >= container.scrollWidth - 5);
+        };
+
+        scrollLeftBtn.addEventListener('click', () => {
+            photoGalleryContainer.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+
+        scrollRightBtn.addEventListener('click', () => {
+            photoGalleryContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+        
+        photoGalleryContainer.addEventListener('scroll', checkScrollButtons);
+        window.addEventListener('resize', checkScrollButtons);
 
         // --- LÓGICA DO MURAL DE RECADOS ---
         onAuthStateChanged(auth, (user) => {
@@ -580,9 +676,129 @@
             showToast('Código PIX copiado!');
         });
 
-    </script>
-    <script>
-        // --- SCRIPT DO CONTADOR REGRESSIVO ---
+        // --- LÓGICA DO CALENDÁRIO ---
+        saveToCalendarBtn.addEventListener('click', () => {
+            const event = {
+                title: "Casamento Luana & Uilian",
+                startDate: "2025-09-20T14:00:00",
+                endDate: "2025-09-21T00:00:00", // Estimativa de 10 horas de festa
+                location: "Alameda dos Abacaxis, 16, Ibiúna, SP, 18152-279",
+                description: "Celebração do casamento de Luana & Uilian. Estamos muito felizes em compartilhar este momento com você!"
+            };
+
+            // Converte as datas para o formato UTC (horário de Brasília é -3)
+            const startDate = new Date(event.startDate + "-03:00").toISOString().replace(/-|:|\.\d\d\d/g,"");
+            const endDate = new Date(event.endDate + "-03:00").toISOString().replace(/-|:|\.\d\d\d/g,"");
+
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:${event.title}
+DTSTART:${startDate}
+DTEND:${endDate}
+LOCATION:${event.location}
+DESCRIPTION:${event.description}
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'casamento-luana-uilian.ics';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Evento salvo! Abra o arquivo para adicionar à sua agenda.");
+        });
+        
+        // --- LÓGICA DA MÚSICA DE FUNDO ---
+        let isMusicPlaying = false;
+        musicToggle.addEventListener('click', () => {
+            if (isMusicPlaying) {
+                backgroundMusic.pause();
+                musicIcon.classList.remove('fa-pause');
+                musicIcon.classList.add('fa-music');
+            } else {
+                backgroundMusic.play();
+                musicIcon.classList.remove('fa-music');
+                musicIcon.classList.add('fa-pause');
+            }
+            isMusicPlaying = !isMusicPlaying;
+        });
+
+        // --- LÓGICA DAS FRASES ALEATÓRIAS ---
+        const phrases = [
+            "O amor é a poesia dos sentidos.",
+            "Duas almas, um só coração.",
+            "Onde há amor, há vida.",
+            "O nosso felizes para sempre começa agora.",
+            "Que o nosso amor seja a nossa melhor história.",
+            "O amor não se vê com os olhos, mas com o coração.",
+            "Juntos é o nosso lugar favorito.",
+            "Um sonho que se sonha junto é realidade."
+        ];
+        let availablePhrases = [...phrases];
+
+        const showRandomPhrase = () => {
+            if (availablePhrases.length === 0) {
+                availablePhrases = [...phrases]; // Reinicia a lista
+            }
+            const randomIndex = Math.floor(Math.random() * availablePhrases.length);
+            const phrase = availablePhrases.splice(randomIndex, 1)[0];
+            
+            weddingPhraseEl.textContent = `"${phrase}"`;
+            weddingPhraseEl.classList.remove('phrase-animation');
+            void weddingPhraseEl.offsetWidth; // Truque para reiniciar a animação
+            weddingPhraseEl.classList.add('phrase-animation');
+        };
+
+        // Mostra a primeira frase e depois a cada 7 segundos
+        setTimeout(showRandomPhrase, 1000);
+        setInterval(showRandomPhrase, 7000);
+        
+        // --- SCRIPT DO CONTADOR REGRESSIVO E CONFETES ---
+        const confettiCtx = confettiCanvas.getContext('2d');
+        let confettiParticles = [];
+
+        const startConfetti = () => {
+            confettiCanvas.style.display = 'block';
+            const numberOfParticles = 200;
+            for (let i = 0; i < numberOfParticles; i++) {
+                confettiParticles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    size: Math.random() * 5 + 2,
+                    speed: Math.random() * 3 + 1,
+                    angle: Math.random() * 360,
+                    color: ['#DDA15E', '#FEFAE0', '#A3B18A'][Math.floor(Math.random() * 3)]
+                });
+            }
+            animateConfetti();
+        };
+
+        const animateConfetti = () => {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            confettiParticles.forEach(p => {
+                p.y += p.speed;
+                p.x += Math.sin(p.angle);
+                confettiCtx.fillStyle = p.color;
+                confettiCtx.fillRect(p.x, p.y, p.size, p.size * 2);
+                if (p.y > confettiCanvas.height) {
+                    p.y = -20;
+                    p.x = Math.random() * confettiCanvas.width;
+                }
+            });
+            requestAnimationFrame(animateConfetti);
+        };
+        
+        const resizeConfettiCanvas = () => {
+            confettiCanvas.width = confettiCanvas.parentElement.offsetWidth;
+            confettiCanvas.height = confettiCanvas.parentElement.offsetHeight;
+        };
+        window.addEventListener('resize', resizeConfettiCanvas);
+        resizeConfettiCanvas();
+
+
         const countdown = () => {
             const weddingDate = new Date("2025-09-20T14:00:00").getTime();
             const now = new Date().getTime();
@@ -590,7 +806,8 @@
 
             if (gap < 0) {
                 clearInterval(countdownInterval);
-                document.getElementById('timer').innerHTML = "<div class='col-span-full text-4xl font-display'>O grande dia chegou!</div>";
+                document.getElementById('timer').innerHTML = "<div class='col-span-full text-4xl font-display fade-in'>O grande dia chegou!</div>";
+                startConfetti();
                 return;
             }
 
@@ -601,6 +818,7 @@
             document.getElementById('seconds').innerText = String(Math.floor((gap % minute) / second)).padStart(2, '0');
         };
         const countdownInterval = setInterval(countdown, 1000);
+
     </script>
 
 </body>
