@@ -10,177 +10,117 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Montserrat:wght@400;500;700&family=Great+Vibes&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        /* Configurações de Cores e Fontes */
+        /* (Seu CSS permanece o mesmo) */
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        'sage-green': '#A3B18A',
-                        'olive-green': '#588157',
-                        'hunter-green': '#3A5A40',
-                        'cream-white': '#FEFAE0',
-                        'warm-beige': '#DDA15E',
-                        'dark-charcoal': '#283618',
-                    },
-                    fontFamily: {
-                        'display': ['Cormorant Garamond', 'serif'],
-                        'sans': ['Montserrat', 'sans-serif'],
-                        'script': ['Great Vibes', 'cursive'],
-                    }
+                    colors: { 'sage-green': '#A3B18A', 'olive-green': '#588157', 'hunter-green': '#3A5A40', 'cream-white': '#FEFAE0', 'warm-beige': '#DDA15E', 'dark-charcoal': '#283618' },
+                    fontFamily: { 'display': ['Cormorant Garamond', 'serif'], 'sans': ['Montserrat', 'sans-serif'], 'script': ['Great Vibes', 'cursive'] }
                 }
             }
         }
-
-        /* Animação de fade-in */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
-
-        /* Fundo com temática de casamento */
-        body {
-            background-color: #FEFAE0;
-            background-image: url('https://www.transparenttextures.com/patterns/elegant-flowers.png');
-            background-attachment: fixed;
-            font-family: 'Montserrat', 'sans-serif';
-            color: #283618;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        body { background-color: #FEFAE0; background-image: url('https://www.transparenttextures.com/patterns/elegant-flowers.png'); background-attachment: fixed; font-family: 'Montserrat', 'sans-serif'; color: #283618; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #588157; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .upload-indicator { display: flex; align-items: center; justify-content: center; background-color: rgba(255, 255, 255, 0.8); border-radius: 0.5rem; }
     </style>
 </head>
 <body class="bg-cream-white">
 
-    <header class="bg-gradient-to-br from-olive-green to-hunter-green text-cream-white text-center py-20 relative overflow-hidden">
-        <div class="absolute inset-0 bg-black opacity-20"></div>
-        <div class="relative z-10">
-            <h1 class="text-7xl md:text-8xl font-script">Luana & Uilian</h1>
-            <p class="font-display text-2xl mt-2 tracking-widest">VAMOS NOS CASAR</p>
-        </div>
-    </header>
-
     <main class="container mx-auto px-6 py-12">
-    
-        <section id="countdown" class="py-6 mb-14">
-            <div class="text-center">
-                <h2 class="text-4xl font-display text-hunter-green mb-6">A contagem regressiva começou!</h2>
-                <div id="timer" class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto text-hunter-green px-4">
-                    <div class="bg-white/60 p-4 rounded-lg shadow-lg backdrop-blur-sm"><div id="days" class="text-5xl font-bold">00</div><div class="text-lg font-display">Dias</div></div>
-                    <div class="bg-white/60 p-4 rounded-lg shadow-lg backdrop-blur-sm"><div id="hours" class="text-5xl font-bold">00</div><div class="text-lg font-display">Horas</div></div>
-                    <div class="bg-white/60 p-4 rounded-lg shadow-lg backdrop-blur-sm"><div id="minutes" class="text-5xl font-bold">00</div><div class="text-lg font-display">Minutos</div></div>
-                    <div class="bg-white/60 p-4 rounded-lg shadow-lg backdrop-blur-sm"><div id="seconds" class="text-5xl font-bold">00</div><div class="text-lg font-display">Segundos</div></div>
+        <section id="fotos" class="mb-20 text-center bg-white/70 p-10 rounded-lg shadow-xl backdrop-blur-sm fade-in">
+            <h2 class="text-5xl font-display text-hunter-green mb-4">Mural de Memórias</h2>
+            <p class="max-w-2xl mx-auto text-lg mb-8">Seus registros tornarão nosso dia ainda mais especial! Compartilhe aqui suas fotos favoritas do nosso casamento. Use a hashtag <strong class="text-olive-green">#LuanaEUilian2025</strong> nas redes sociais!</p>
+            <div class="max-w-md mx-auto">
+                <label for="photo-upload" class="cursor-pointer bg-olive-green hover:bg-hunter-green text-cream-white font-bold py-3 px-8 rounded-full transition duration-300 inline-block shadow-lg">
+                    <i class="fas fa-camera-retro mr-2"></i> Enviar uma Foto
+                </label>
+                <input type="file" id="photo-upload" class="hidden" accept="image/*" multiple>
+            </div>
+            <div id="photo-preview-gallery" class="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 </div>
-            </div>
         </section>
 
-        <section id="info" class="mb-20 p-8 rounded-lg bg-white/70 shadow-xl backdrop-blur-sm fade-in">
-            <h2 class="text-5xl font-display text-hunter-green text-center mb-10">O Grande Dia</h2>
-            <div class="grid md:grid-cols-2 gap-10 items-start">
-                <div class="flex flex-col space-y-8">
-                    <div class="flex items-center"><div class="w-16 h-16 flex-shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green shadow-md mr-4"><i class="fa-solid fa-calendar-days fa-2x text-cream-white"></i></div><div><h3 class="text-2xl font-display text-hunter-green">Data & Hora</h3><p class="text-lg">20 de Setembro de 2025 às 14:00</p></div></div>
-                    <div class="flex items-center"><div class="w-16 h-16 flex-shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green shadow-md mr-4"><i class="fa-solid fa-cloud-sun-rain fa-2x text-cream-white"></i></div><div><h3 class="text-2xl font-display text-hunter-green">Previsão do Tempo</h3><p class="text-lg">Dia agradável e ensolarado.<br>Min: 15°C | Máx: 26°C</p></div></div>
-                    <div class="flex items-center"><div class="w-16 h-16 flex-shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green shadow-md mr-4"><i class="fa-solid fa-map-location-dot fa-2x text-cream-white"></i></div><div><h3 class="text-2xl font-display text-hunter-green">Localização</h3><p class="text-lg">Alameda dos Abacaxis, 16<br>Ibiúna, SP, 18152-279</p></div></div>
-                </div>
-                <div class="rounded-lg overflow-hidden shadow-xl w-full h-80"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.080516629113!2d-47.22855168853761!3d-23.63737097865893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf30e800000001%3A0x6c0d9c4f9b8f3a3d!2sAlameda%20dos%20Abacaxis%2C%2016%20-%20Recreio%2C%20Ibi%C3%BAna%20-%20SP%2C%2018152-279!5e0!3m2!1spt-BR!2sbr!4v1722312644485!5m2!1spt-BR!2sbr" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-            </div>
-        </section>
-
-        <section id="presentes" class="mb-20 text-center bg-white/70 p-10 rounded-lg shadow-xl backdrop-blur-sm fade-in">
-            <div class="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green mb-4 shadow-md"><i class="fa-solid fa-gift fa-2x text-cream-white"></i></div>
-            <h2 class="text-5xl font-display text-hunter-green mb-4">Lista de Presentes</h2>
-            <p class="max-w-2xl mx-auto text-lg mb-8 text-dark-charcoal/80">Sua presença é o nosso maior presente! Mas, se desejar nos mimar, ficaremos muito felizes com uma contribuição para nossa lua de mel.</p>
-            <a href="https://geradordepix.com/pagamento/01JXQ8JAPQ23R1FN2QEQMJEWC1" target="_blank" class="cursor-pointer bg-olive-green hover:bg-hunter-green text-cream-white font-bold py-3 px-8 rounded-full transition duration-300 inline-block shadow-lg"><i class="fa-brands fa-pix mr-2"></i> Presentear com PIX</a>
-        </section>
-
-        <section id="manual" class="mb-20 fade-in">
-            <h2 class="text-5xl font-display text-hunter-green text-center mb-10">Dicas dos Noivos</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-envelope-circle-check fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Confirme sua presença</p></div>
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-users-slash fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Convidado não convida</p></div>
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-clock fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Seja pontual</p></div>
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-user-tie fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Traje: Esporte Fino</p></div>
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-gem fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Branco é da noiva</p></div>
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-camera-retro fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Respeite o fotógrafo</p></div>
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-seedling fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Não leve a decoração</p></div>
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-cookie-bite fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Aguarde os doces</p></div>
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-champagne-glasses fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Aproveite muito!</p></div>
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-hand-holding-heart fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Despeça-se dos noivos</p></div>
-            </div>
-        </section>
-
-        <section id="dresscode" class="mb-20 text-center bg-white/70 p-10 rounded-lg shadow-xl backdrop-blur-sm fade-in">
-            <div class="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green mb-4 shadow-md"><i class="fa-solid fa-shirt fa-2x text-cream-white"></i></div>
-            <h2 class="text-5xl font-display text-hunter-green mb-4">Dress Code: Esporte Fino</h2>
-            <p class="max-w-3xl mx-auto text-lg mb-8 text-dark-charcoal/80">Para que todos se sintam à vontade e elegantes, sugerimos o traje Esporte Fino. O casamento será em uma chácara, então preze pelo conforto!</p>
-            <div class="grid md:grid-cols-2 gap-8 text-left">
-                <div><h3 class="font-display text-2xl text-olive-green mb-2">Para Elas:</h3><p>Vestidos de tecidos nobres (curtos, mídi ou longos), macacões elegantes ou saias com blusas sofisticadas. Saltos grossos ou anabelas são ótimos para o gramado. Evitem o branco e tons muito próximos, essa cor é da noiva!</p></div>
-                <div><h3 class="font-display text-2xl text-olive-green mb-2">Para Eles:</h3><p>Calça de sarja ou social com camisa. O uso de blazer ou paletó é opcional e bem-vindo. Sapatos sociais ou sapatênis de couro completam o visual. A gravata não é obrigatória.</p></div>
-            </div>
-        </section>
-
-        <section id="cronograma" class="mb-20 fade-in">
-            <h2 class="text-5xl font-display text-hunter-green text-center mb-10">Nosso Dia, Passo a Passo</h2>
-            <div class="max-w-3xl mx-auto">
-                <div class="relative border-l-2 border-sage-green pl-10 py-4"><div class="absolute w-5 h-5 bg-olive-green rounded-full -left-[11px] top-5 border-4 border-cream-white"></div><p class="font-bold text-xl text-olive-green font-display">13:00 - Recepção dos Hóspedes</p><p class="text-dark-charcoal/80">Para quem for se hospedar, entrega das chaves e acomodação.</p></div>
-                <div class="relative border-l-2 border-sage-green pl-10 py-4"><div class="absolute w-5 h-5 bg-olive-green rounded-full -left-[11px] top-5 border-4 border-cream-white"></div><p class="font-bold text-xl text-olive-green font-display">14:00 - Início da Celebração</p><p class="text-dark-charcoal/80">Recepção de todos os convidados com DJ e buffet de entradinhas.</p></div>
-                <div class="relative border-l-2 border-sage-green pl-10 py-4"><div class="absolute w-5 h-5 bg-olive-green rounded-full -left-[11px] top-5 border-4 border-cream-white"></div><p class="font-bold text-xl text-olive-green font-display">14:30 - Cerimônia</p<p class="text-dark-charcoal/80">A emocionante entrada dos noivos e a celebração do nosso amor.</p></div>
-                <div class="relative border-l-2 border-sage-green pl-10 py-4"><div class="absolute w-5 h-5 bg-olive-green rounded-full -left-[11px] top-5 border-4 border-cream-white"></div><p class="font-bold text-xl text-olive-green font-display">14:45 - Almoço</p><p class="text-dark-charcoal/80">Hora de saborear as delícias preparadas com carinho.</p></div>
-                <div class="relative border-l-2 border-sage-green pl-10 py-4"><div class="absolute w-5 h-5 bg-olive-green rounded-full -left-[11px] top-5 border-4 border-cream-white"></div><p class="font-bold text-xl text-olive-green font-display">15:30 - Música ao Vivo</p<p class="text-dark-charcoal/80">A banda começa a tocar para animar a todos!</p></div>
-                <div class="relative border-l-2 border-sage-green pl-10 py-4"><div class="absolute w-5 h-5 bg-olive-green rounded-full -left-[11px] top-5 border-4 border-cream-white"></div><p class="font-bold text-xl text-olive-green font-display">18:45 - Pista de Dança com DJ</p<p class="text-dark-charcoal/80">Prepare-se para dançar até o sol raiar!</p></div>
-            </div>
-        </section>
-        
-        <section id="playlist" class="mb-20 text-center fade-in">
-            <h2 class="text-5xl font-display text-hunter-green mb-8">Nossa Trilha Sonora</h2>
-            <p class="max-w-2xl mx-auto text-lg mb-8">Dê o play e entre no clima da nossa festa!</p>
-            <div class="flex justify-center shadow-2xl rounded-lg overflow-hidden">
-                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/5uRAzl3BNKYrEqg4xqa1wS?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="bg-gradient-to-tr from-olive-green to-hunter-green text-cream-white text-center p-12 mt-20">
-        <p class="font-script text-4xl">Com amor, Luana & Uilian</p>
-        <p class="mt-2 font-display tracking-widest">20.09.2025</p>
-    </footer>
+        </main>
 
     <script type="module">
-        // Importações do Firebase - Apenas o necessário
+        // Importações do Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        // Se você não usar mais NENHUM serviço do Firebase, pode remover todo o script.
-        // Se ainda for usar para outra coisa (ex: autenticação), mantenha o necessário.
+        import { getFirestore, collection, addDoc, onSnapshot, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // --- CONFIGURAÇÃO DO FIREBASE ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-
-        // Inicializa o App do Firebase (se ainda for necessário para outras funcionalidades)
-        const app = initializeApp(firebaseConfig);
-
-    </script>
-    <script>
-        // --- SCRIPT DO CONTADOR REGRESSIVO ---
-        const countdown = () => {
-            const weddingDate = new Date("2025-09-20T14:00:00").getTime();
-            const now = new Date().getTime();
-            const gap = weddingDate - now;
-
-            if (gap < 0) {
-                clearInterval(countdownInterval);
-                document.getElementById('timer').innerHTML = "<div class='col-span-full text-4xl font-display'>O grande dia chegou!</div>";
-                return;
-            }
-
-            const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
-            document.getElementById('days').innerText = String(Math.floor(gap / day)).padStart(2, '0');
-            document.getElementById('hours').innerText = String(Math.floor((gap % day) / hour)).padStart(2, '0');
-            document.getElementById('minutes').innerText = String(Math.floor((gap % hour) / minute)).padStart(2, '0');
-            document.getElementById('seconds').innerText = String(Math.floor((gap % minute) / second)).padStart(2, '0');
+        // Configuração do seu Firebase
+        const firebaseConfig = {
+          apiKey: "AIzaSyCfqesuR8nIDYoXtLMvQQqzeHTFmAurLZA",
+          authDomain: "casamento-luana-uilian.firebaseapp.com",
+          projectId: "casamento-luana-uilian",
+          storageBucket: "casamento-luana-uilian.appspot.com", // CORRIGIDO: O .appspot.com é o padrão para o storageBucket
+          messagingSenderId: "305363486620",
+          appId: "1:305363486620:web:c67a274d6aedc3cce1ea59"
         };
-        const countdownInterval = setInterval(countdown, 1000);
-    </script>
 
+        // Inicializa serviços do Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const auth = getAuth(app);
+
+        // O restante do seu código JavaScript para o mural de fotos continua aqui...
+        const photosCollection = collection(db, "photos");
+        let currentUserId = null;
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                loadPhotos();
+            } else {
+                signInAnonymously(auth).catch((error) => console.error("Erro no login anônimo:", error));
+            }
+        });
+        const photoGallery = document.getElementById('photo-preview-gallery');
+        const photoUploadInput = document.getElementById('photo-upload');
+        photoUploadInput.addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (!currentUserId || !files.length) return;
+            for (const file of files) { handlePhotoUpload(file); }
+            e.target.value = '';
+        });
+        const handlePhotoUpload = async (file) => {
+            const tempId = `temp_${Date.now()}`;
+            const loaderHTML = `<div id="${tempId}" class="relative w-full h-48 rounded-lg overflow-hidden shadow-md upload-indicator"><div class="loader"></div></div>`;
+            photoGallery.insertAdjacentHTML('afterbegin', loaderHTML);
+            const filePath = `wedding_photos/${currentUserId}_${Date.now()}_${file.name}`;
+            const storageRef = ref(storage, filePath);
+            try {
+                await uploadBytes(storageRef, file);
+                const url = await getDownloadURL(storageRef);
+                await addDoc(photosCollection, { imageUrl: url, storagePath: filePath, userId: currentUserId, createdAt: serverTimestamp() });
+            } catch (error) {
+                console.error("Erro no upload da foto:", error);
+                alert("Ops! Algo deu errado ao enviar sua foto. Tente novamente.");
+            } finally {
+                 document.getElementById(tempId)?.remove();
+            }
+        };
+        const createPhotoCard = (docData) => {
+            const { imageUrl } = docData;
+            const card = document.createElement('div');
+            card.className = 'relative w-full h-48 rounded-lg overflow-hidden shadow-md fade-in group';
+            card.innerHTML = `<img src="${imageUrl}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" alt="Foto do casamento">`;
+            return card;
+        };
+        const loadPhotos = () => {
+            onSnapshot(photosCollection, (snapshot) => {
+                photoGallery.innerHTML = '';
+                snapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0))
+                    .forEach(docData => photoGallery.appendChild(createPhotoCard(docData)));
+            });
+        };
+    </script>
+    
 </body>
 </html>
