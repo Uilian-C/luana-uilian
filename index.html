@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Montserrat:wght@400;500;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Montserrat:wght@400;500;700&family=Great+Vibes&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         /* Configurações de Cores e Fontes */
@@ -26,6 +26,7 @@
                         'display': ['Cormorant Garamond', 'serif'],
                         'sans': ['Montserrat', 'sans-serif'],
                         'script': ['Great Vibes', 'cursive'],
+                        'title': ['Mrs Saint Delafield', 'cursive']
                     }
                 }
             }
@@ -77,7 +78,7 @@
     <header class="bg-gradient-to-br from-olive-green to-hunter-green text-cream-white text-center py-20 relative overflow-hidden">
         <div class="absolute inset-0 bg-black opacity-20"></div>
         <div class="relative z-10">
-            <h1 class="text-7xl md:text-8xl font-script">Luana & Uilian</h1>
+            <h1 class="text-8xl md:text-9xl font-title">Luana & Uilian</h1>
             <p class="font-display text-2xl mt-2 tracking-widest">VAMOS NOS CASAR</p>
         </div>
     </header>
@@ -112,13 +113,33 @@
             <div class="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green mb-4 shadow-md"><i class="fa-solid fa-gift fa-2x text-cream-white"></i></div>
             <h2 class="text-5xl font-display text-hunter-green mb-4">Lista de Presentes</h2>
             <p class="max-w-2xl mx-auto text-lg mb-8 text-dark-charcoal/80">Sua presença é o nosso maior presente! Mas, se desejar nos mimar, ficaremos muito felizes com uma contribuição para nossa lua de mel.</p>
-            <a href="https://geradordepix.com/pagamento/01JXQ8JAPQ23R1FN2QEQMJEWC1" target="_blank" class="cursor-pointer bg-olive-green hover:bg-hunter-green text-cream-white font-bold py-3 px-8 rounded-full transition duration-300 inline-block shadow-lg"><i class="fa-brands fa-pix mr-2"></i> Presentear com PIX</a>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-8 mt-8">
+                <!-- QR Code -->
+                <div class="text-center">
+                    <img src="http://googleusercontent.com/file_content/1" alt="QR Code PIX" class="w-48 h-48 rounded-lg shadow-lg mx-auto border-4 border-white">
+                    <p class="mt-2 text-sm text-dark-charcoal/70">Escaneie o QR Code</p>
+                </div>
+                <!-- Separator -->
+                <div class="flex items-center">
+                    <div class="h-24 w-px bg-sage-green hidden md:block"></div>
+                    <div class="w-24 h-px bg-sage-green md:hidden"></div>
+                </div>
+                <!-- Copia e Cola -->
+                <div class="text-center">
+                    <p class="font-display text-xl text-hunter-green mb-2">Ou use o PIX Copia e Cola:</p>
+                    <div class="flex items-center justify-center bg-white border border-dashed border-sage-green p-2 rounded-lg max-w-xs mx-auto">
+                        <input type="text" readonly id="pix-code" class="text-xs bg-transparent text-dark-charcoal/80 flex-grow focus:outline-none" value="00020126580014BR.GOV.BCB.PIX0136d39ae767-90b6-424b-bb11-503342731bc25204000053039865802BR5901N6001C62170513LUANAS2UILIAN6304DE3C">
+                        <button id="copy-pix-button" class="ml-2 bg-olive-green text-cream-white px-3 py-1 rounded-md hover:bg-hunter-green transition flex-shrink-0">
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="manual" class="mb-20 fade-in">
             <h2 class="text-5xl font-display text-hunter-green text-center mb-10">Dicas dos Noivos</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-                <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-envelope-circle-check fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Confirme sua presença</p></div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 justify-center">
                 <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-users-slash fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Convidado não convida</p></div>
                 <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-clock fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Seja pontual</p></div>
                 <div class="text-center p-4 bg-white rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-user-tie fa-2x text-warm-beige mb-2"></i><p class="font-display text-lg">Traje: Esporte Fino</p></div>
@@ -161,6 +182,15 @@
             </div>
         </section>
 
+        <section id="photos" class="mb-20 text-center bg-white/70 p-10 rounded-lg shadow-xl backdrop-blur-sm fade-in">
+            <div class="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green mb-4 shadow-md"><i class="fa-solid fa-images fa-2x text-cream-white"></i></div>
+            <h2 class="text-5xl font-display text-hunter-green mb-4">Nossas Memórias</h2>
+            <p class="max-w-2xl mx-auto text-lg mb-8 text-dark-charcoal/80">Compartilhe seus registros do nosso grande dia! Acesse nosso álbum compartilhado para ver as fotos e adicionar as suas.</p>
+            <a href="https://photos.app.goo.gl/mFiMCHeZTb7X8Sf79" target="_blank" rel="noopener noreferrer" class="cursor-pointer bg-warm-beige hover:bg-opacity-80 text-dark-charcoal font-bold py-3 px-8 rounded-full transition duration-300 inline-block shadow-lg">
+                <i class="fa-brands fa-google-photos mr-2"></i>Acessar Álbum de Fotos
+            </a>
+        </section>
+
         <!-- NOVA SEÇÃO: MURAL DE RECADOS -->
         <section id="guestbook" class="mb-20 bg-white/70 p-10 rounded-lg shadow-xl backdrop-blur-sm fade-in">
             <div class="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gradient-to-br from-sage-green to-olive-green mb-4 shadow-md"><i class="fa-solid fa-pen-fancy fa-2x text-cream-white"></i></div>
@@ -189,7 +219,7 @@
     </main>
 
     <footer class="bg-gradient-to-tr from-olive-green to-hunter-green text-cream-white text-center p-12 mt-20">
-        <p class="font-script text-4xl">Com amor, Luana & Uilian</p>
+        <p class="font-title text-5xl">Com amor, Luana & Uilian</p>
         <p class="mt-2 font-display tracking-widest">20.09.2025</p>
     </footer>
 
@@ -236,6 +266,8 @@
         const modal = document.getElementById('confirm-modal');
         const modalOk = document.getElementById('confirm-modal-ok');
         const modalCancel = document.getElementById('confirm-modal-cancel');
+        const copyPixButton = document.getElementById('copy-pix-button');
+        const pixCodeInput = document.getElementById('pix-code');
 
         // Verificação para garantir que a configuração foi preenchida
         if (!firebaseConfig.apiKey) {
@@ -358,6 +390,22 @@
                 showToast('Não foi possível apagar o recado.');
             }
         };
+
+        // --- LÓGICA DO PIX COPIA E COLA ---
+        copyPixButton.addEventListener('click', () => {
+            const textToCopy = pixCodeInput.value;
+            
+            // Cria um elemento de texto temporário para copiar
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            showToast('Código PIX copiado!');
+        });
+
     </script>
     <script>
         // --- SCRIPT DO CONTADOR REGRESSIVO ---
