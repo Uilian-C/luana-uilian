@@ -369,6 +369,9 @@
                     <img id="main-photo" src="" alt="Foto em destaque" class="max-w-full max-h-full object-contain cursor-pointer">
                     <button id="main-photo-next-btn" class="main-photo-nav absolute right-2 md:right-4 top-1/2 -translate-y-1/2 text-white bg-black/30 rounded-full w-10 h-10 flex items-center justify-center z-10"><i class="fa-solid fa-chevron-right"></i></button>
                     <p id="loading-photos" class="text-center text-dark-charcoal/60">Carregando fotos...</p>
+                    <div id="main-photo-like-container" class="absolute bottom-4 right-4 flex items-center bg-black/40 text-white text-lg px-3 py-1.5 rounded-full">
+                        <!-- Conteúdo do Like será injetado pelo JS -->
+                    </div>
                 </div>
 
                 <!-- Carrossel de Miniaturas -->
@@ -484,6 +487,7 @@
         const copyPixButton = document.getElementById('copy-pix-button');
         const pixCodeInput = document.getElementById('pix-code');
         const mainPhoto = document.getElementById('main-photo');
+        const mainPhotoLikeContainer = document.getElementById('main-photo-like-container');
         const mainPhotoPrevBtn = document.getElementById('main-photo-prev-btn');
         const mainPhotoNextBtn = document.getElementById('main-photo-next-btn');
         const thumbnailGallery = document.getElementById('thumbnail-gallery');
@@ -700,12 +704,29 @@
         const updateMainPhoto = (index) => {
             if (photoData.length === 0) return;
             currentPhotoIndex = index;
-            mainPhoto.src = photoData[index].imageUrl;
+            const photo = photoData[index];
+            mainPhoto.src = photo.imageUrl;
+
+            const likes = photo.likes || [];
+            const hasLiked = currentUser ? likes.includes(currentUser.uid) : false;
+            mainPhotoLikeContainer.innerHTML = `
+                <span class="like-btn ${hasLiked ? 'liked' : ''}" data-collection="photos" data-id="${photo.id}">
+                    <i class="fa-${hasLiked ? 'solid' : 'regular'} fa-heart"></i>
+                </span>
+                <span class="ml-2">${likes.length}</span>
+            `;
 
             document.querySelectorAll('.thumbnail-item').forEach((thumb, i) => {
                 thumb.classList.toggle('active', i === index);
             });
         };
+        
+        mainPhotoLikeContainer.addEventListener('click', (e) => {
+            const likeBtn = e.target.closest('.like-btn');
+            if (likeBtn) {
+                toggleLike(likeBtn.dataset.collection, likeBtn.dataset.id);
+            }
+        });
 
         thumbnailGallery.addEventListener('click', (e) => {
             const likeBtn = e.target.closest('.like-btn');
