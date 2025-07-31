@@ -155,10 +155,17 @@
         }
         .like-btn.liked {
             color: #ef4444; /* red-500 */
-            transform: scale(1.1);
         }
         .like-btn:hover {
             transform: scale(1.1);
+        }
+        @keyframes like-pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .like-btn.liked {
+            animation: like-pop 0.3s ease-in-out;
         }
 
     </style>
@@ -448,7 +455,7 @@
     <script type="module">
         // Importações do Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, doc, deleteDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, doc, deleteDoc, getDocs, where, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
@@ -543,6 +550,34 @@
             modalCancel.addEventListener('click', closeModal);
         };
 
+        // --- LÓGICA DE LIKES ---
+        const toggleLike = async (collectionName, docId) => {
+            if (!currentUser) {
+                showToast("Você precisa estar conectado para curtir.");
+                return;
+            }
+            const collectionRef = collectionName === 'messages' ? messagesCollection : photosCollection;
+            const docRef = doc(collectionRef, docId);
+            try {
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    let likes = data.likes || [];
+                    const userId = currentUser.uid;
+
+                    if (likes.includes(userId)) {
+                        likes = likes.filter(id => id !== userId);
+                    } else {
+                        likes.push(userId);
+                    }
+                    await updateDoc(docRef, { likes: likes });
+                }
+            } catch (error) {
+                console.error("Erro ao curtir:", error);
+                showToast("Não foi possível registrar sua curtida.");
+            }
+        };
+
         // --- LÓGICA DA GALERIA DE FOTOS ---
         photoUploadInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -586,7 +621,8 @@
                             imageUrl: downloadURL,
                             storagePath: storageRef.fullPath,
                             authorId: currentUser.uid,
-                            createdAt: serverTimestamp()
+                            createdAt: serverTimestamp(),
+                            likes: []
                         });
                         showToast("Foto enviada com sucesso!");
                         uploadProgressBar.classList.add('hidden');
@@ -638,6 +674,19 @@
                         };
                         thumbEl.appendChild(deleteBtn);
                     }
+                    
+                    const likes = photo.likes || [];
+                    const hasLiked = currentUser ? likes.includes(currentUser.uid) : false;
+                    const likeEl = document.createElement('div');
+                    likeEl.className = 'absolute bottom-1 right-1 flex items-center bg-black/40 text-white text-xs px-1.5 py-0.5 rounded-full';
+                    likeEl.innerHTML = `
+                        <span class="like-btn ${hasLiked ? 'liked' : ''}" data-collection="photos" data-id="${photo.id}">
+                            <i class="fa-${hasLiked ? 'solid' : 'regular'} fa-heart"></i>
+                        </span>
+                        <span class="ml-1">${likes.length}</span>
+                    `;
+                    thumbEl.appendChild(likeEl);
+
                     thumbnailGallery.appendChild(thumbEl);
                 });
                 setTimeout(checkScrollButtons, 100);
@@ -659,6 +708,13 @@
         };
 
         thumbnailGallery.addEventListener('click', (e) => {
+            const likeBtn = e.target.closest('.like-btn');
+            if (likeBtn) {
+                e.stopPropagation(); // Previne que o modal da foto abra ao clicar no like
+                toggleLike(likeBtn.dataset.collection, likeBtn.dataset.id);
+                return;
+            }
+            
             const thumb = e.target.closest('.thumbnail-item');
             if (thumb) {
                 const index = parseInt(thumb.dataset.index);
@@ -762,7 +818,7 @@
                 if (messages.length === 0 && snapshot.empty) {
                     messagesList.appendChild(loadingMessages);
                 }
-                messages.forEach(msg => displayMessage(msg, msg.id));
+                messages.forEach(msg => displayMessage(msg));
                 setTimeout(checkMessageScrollButtons, 100);
 
             }, (error) => {
@@ -777,15 +833,24 @@
             return timestamp.toDate().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
         };
 
-        const displayMessage = (data, id) => {
+        const displayMessage = (data) => {
             const card = document.createElement('div');
-            card.className = 'bg-white/80 p-6 rounded-lg shadow-md border-l-4 border-sage-green fade-in w-80 h-48 flex-shrink-0 flex flex-col justify-between relative gallery-item';
+            card.className = 'bg-white/80 p-6 rounded-lg shadow-md border-l-4 border-sage-green fade-in w-80 h-52 flex-shrink-0 flex flex-col justify-between relative gallery-item';
             
+            const likes = data.likes || [];
+            const hasLiked = currentUser ? likes.includes(currentUser.uid) : false;
+
             const content = `
-                <div>
+                <div class="flex-grow">
                     <p class="font-bold font-display text-xl text-olive-green">${data.name}</p>
                     <p class="text-sm text-dark-charcoal/50 mb-3">${formatDate(data.createdAt)}</p>
                     <p class="text-dark-charcoal/90 whitespace-pre-wrap text-sm">${data.message}</p>
+                </div>
+                <div class="flex items-center justify-end mt-2 text-dark-charcoal/60">
+                    <span class="like-btn ${hasLiked ? 'liked' : ''}" data-collection="messages" data-id="${data.id}">
+                        <i class="fa-${hasLiked ? 'solid' : 'regular'} fa-heart"></i>
+                    </span>
+                    <span class="ml-1.5 text-sm">${likes.length}</span>
                 </div>
             `;
             card.innerHTML = content;
@@ -794,12 +859,19 @@
                 const deleteButton = document.createElement('button');
                 deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
                 deleteButton.className = 'delete-btn text-red-500 hover:text-red-700 transition self-start';
-                deleteButton.onclick = () => showConfirm("Tem certeza que deseja apagar este recado?", () => deleteMessage(id));
+                deleteButton.onclick = () => showConfirm("Tem certeza que deseja apagar este recado?", () => deleteMessage(data.id));
                 card.appendChild(deleteButton);
             }
             messagesList.appendChild(card);
         };
         
+        messagesList.addEventListener('click', (e) => {
+            const likeBtn = e.target.closest('.like-btn');
+            if (likeBtn) {
+                toggleLike(likeBtn.dataset.collection, likeBtn.dataset.id);
+            }
+        });
+
         submitButton.addEventListener('click', async () => {
             const name = guestNameInput.value.trim();
             const message = guestMessageInput.value.trim();
@@ -807,7 +879,13 @@
             if (!currentUser) return showToast('Aguarde um momento, estamos conectando...');
 
             try {
-                await addDoc(messagesCollection, { name, message, createdAt: serverTimestamp(), authorId: currentUser.uid });
+                await addDoc(messagesCollection, { 
+                    name, 
+                    message, 
+                    createdAt: serverTimestamp(), 
+                    authorId: currentUser.uid,
+                    likes: [] 
+                });
                 guestMessageInput.value = '';
                 showToast('Seu recado foi enviado com sucesso!');
             } catch (error) {
