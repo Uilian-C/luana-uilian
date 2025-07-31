@@ -147,6 +147,20 @@
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
         }
+        
+        /* Estilos para o botão de Like */
+        .like-btn {
+            cursor: pointer;
+            transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .like-btn.liked {
+            color: #ef4444; /* red-500 */
+            transform: scale(1.1);
+        }
+        .like-btn:hover {
+            transform: scale(1.1);
+        }
+
     </style>
 </head>
 <body class="bg-cream-white">
