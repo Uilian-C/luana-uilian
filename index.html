@@ -1053,7 +1053,7 @@
         
         window.addEventListener('resize', checkMessageScrollButtons);
         
-        // --- LÓGICA DAS SUGESTÕES DE MÚSICA (CORRIGIDO) ---
+        // --- LÓGICA DAS SUGESTÕES DE MÚSICA (SOLUÇÃO DEFINITIVA) ---
         const setupSongSuggestor = (type, searchInput, searchResults, submitBtn, listElement, collection) => {
             let searchTimeout;
             let selectedSong = null;
@@ -1139,15 +1139,22 @@
                     suggestions.forEach(data => {
                         const li = document.createElement('li');
                         li.className = 'text-sm bg-white/50 p-2 rounded flex items-center justify-between gap-2';
-                        li.innerHTML = `
-                            <div class="flex items-center gap-2 overflow-hidden">
-                                <img src="${data.artworkUrl}" class="w-8 h-8 rounded flex-shrink-0">
-                                <div class="overflow-hidden min-w-0 flex-1">
-                                    <p class="font-bold truncate">${data.trackName}</p>
-                                    <p class="text-xs truncate">${data.artistName}</p>
-                                </div>
+                        
+                        // -- INÍCIO DA ESTRUTURA CORRIGIDA --
+                        const contentWrapper = document.createElement('div');
+                        contentWrapper.className = 'flex items-center gap-2 overflow-hidden min-w-0';
+
+                        contentWrapper.innerHTML = `
+                            <img src="${data.artworkUrl}" class="w-8 h-8 rounded flex-shrink-0">
+                            <div class="flex-1 min-w-0">
+                                <p class="font-bold truncate">${data.trackName}</p>
+                                <p class="text-xs truncate">${data.artistName}</p>
                             </div>
                         `;
+                        
+                        li.appendChild(contentWrapper);
+                        // -- FIM DA ESTRUTURA CORRIGIDA --
+
                         if (currentUser && currentUser.uid === data.suggesterId) {
                             const deleteBtn = document.createElement('button');
                             deleteBtn.innerHTML = '<i class="fa-solid fa-trash-can fa-xs"></i>';
