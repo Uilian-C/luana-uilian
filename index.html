@@ -380,7 +380,7 @@
                     <h3 class="font-display text-2xl text-olive-green mb-4 text-center"><i class="fa-solid fa-compact-disc mr-2"></i>Sugestões para o DJ</h3>
                     <div class="bg-cream-white/50 p-4 rounded-lg">
                         <div class="relative">
-                            <input id="dj-song-search" type="text" placeholder="Digite o nome da música para buscar..." class="w-full p-2 mb-2 rounded border border-sage-green">
+                            <input id="dj-song-search" type="text" placeholder="Digite o nome da música para buscar..." class="w-full p-2 mb-2 rounded border border-sage-green min-w-0">
                              <p class="text-xs text-center text-dark-charcoal/60 -mt-1 mb-3">Selecione a música na lista de resultados.</p>
                             <div id="dj-search-results" class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-lg max-h-48 overflow-y-auto hidden"></div>
                         </div>
@@ -392,7 +392,7 @@
                     <h3 class="font-display text-2xl text-olive-green mb-4 text-center"><i class="fa-solid fa-guitar mr-2"></i>Pedidos para a Banda</h3>
                      <div class="bg-cream-white/50 p-4 rounded-lg">
                          <div class="relative">
-                            <input id="band-song-search" type="text" placeholder="Digite o nome da música para buscar..." class="w-full p-2 mb-2 rounded border border-sage-green">
+                            <input id="band-song-search" type="text" placeholder="Digite o nome da música para buscar..." class="w-full p-2 mb-2 rounded border border-sage-green min-w-0">
                              <p class="text-xs text-center text-dark-charcoal/60 -mt-1 mb-3">Selecione a música na lista de resultados.</p>
                             <div id="band-search-results" class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-lg max-h-48 overflow-y-auto hidden"></div>
                         </div>
@@ -1053,7 +1053,7 @@
         
         window.addEventListener('resize', checkMessageScrollButtons);
         
-        // --- LÓGICA DAS SUGESTÕES DE MÚSICA (SOLUÇÃO DEFINITIVA) ---
+        // --- LÓGICA DAS SUGESTÕES DE MÚSICA ---
         const setupSongSuggestor = (type, searchInput, searchResults, submitBtn, listElement, collection) => {
             let searchTimeout;
             let selectedSong = null;
@@ -1140,7 +1140,6 @@
                         const li = document.createElement('li');
                         li.className = 'text-sm bg-white/50 p-2 rounded flex items-center justify-between gap-2';
                         
-                        // -- INÍCIO DA ESTRUTURA CORRIGIDA --
                         const contentWrapper = document.createElement('div');
                         contentWrapper.className = 'flex items-center gap-2 overflow-hidden min-w-0';
 
@@ -1153,7 +1152,6 @@
                         `;
                         
                         li.appendChild(contentWrapper);
-                        // -- FIM DA ESTRUTURA CORRIGIDA --
 
                         if (currentUser && currentUser.uid === data.suggesterId) {
                             const deleteBtn = document.createElement('button');
